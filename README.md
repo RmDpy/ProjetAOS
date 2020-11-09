@@ -14,6 +14,7 @@ Le projet comprend une API en Node et une APP en Angular. L'intégration de l'AP
 **DB :** Créer une nouvelle DB 'db_gmao_local' sur MongoDB et y importer le contenu de api/db_data
 
 Note - l'APP a accés aux routes de l'API grâce à son **proxy.conf.json**
+
 Exemple : localhost:4200/api/magasin est une route viable pour HTTP dans le code de l'APP  
 
 ## Développé avec
@@ -27,7 +28,7 @@ Le coeur du projet étant son API, le starter-kit de Nebular a été utilisé co
 
 **Module d'auth :** voir app/node_modules/nebular/auth - avec front et diverses stratégies
 
-[Doc Nebular Auth](https://akveo.github.io/nebular/docs/auth/configuring-a-strategy#strategy) - Documentation Nebular sur les stratégies et l'auth
+**[Doc Nebular Auth](https://akveo.github.io/nebular/docs/auth/configuring-a-strategy#strategy) :** Documentation Nebular sur les stratégies et l'auth
 
 **Modules GMAO :** voir app/src/app/pages/tables - Nous n'utilisons que des components à base de tables
 
