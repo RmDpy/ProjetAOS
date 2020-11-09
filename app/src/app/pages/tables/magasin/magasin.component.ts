@@ -56,9 +56,10 @@ export class MagasinComponent {
   };
 
   source: LocalDataSource = new LocalDataSource(); //Declare une nouvelle source de données locales
- 
+
   constructor(private service: MagasinData) { //Param le service depuis lequel on va charger nos données
     const data = this.service.getData(); //Call la méthode du service supposée gérer le http.get du bordel
+    
     this.source.load(data); //Utilise le bullshit fourni par la template pour charger le résultat dans notre table
   }
 
@@ -71,7 +72,7 @@ export class MagasinComponent {
   }
 
   onCustomStock(event): void {
-    var id = event.data.id; 
+    var id = event.data.id;
     window.location.href = "/pages/tables/stock";
     //this.router.navigate("/pages/tables/stock");
   }

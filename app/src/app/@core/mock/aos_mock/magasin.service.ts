@@ -1,44 +1,44 @@
 import { Injectable } from '@angular/core';
 import { MagasinData } from '../../data/aos_data/magasin';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; //Import obligatoire pour manipuler HTTP
-import { Observable, of } from 'rxjs'; //Import obligatoire pour manipuler HTTP selon la doc
-import { catchError, map, tap } from 'rxjs/operators'; //idem
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Import obligatoire pour manipuler HTTP
+import { Observable, of } from 'rxjs'; // Import obligatoire pour manipuler HTTP selon la doc
+import { catchError, map, tap } from 'rxjs/operators'; // idem
 
 @Injectable()
-export class MagasinService extends MagasinData { //Le service qui permet de gérer nos datas. C'est ici que je chie du sang.
+export class MagasinService extends MagasinData { // Le service qui permet de gérer nos datas.
 
-  private magasinUrl = 'api/magasin';  //URL utilisée pour communiquer avec l'API - localhost:4200/api/magasin = get tous les magasins
+  private magasinUrl = 'api/magasin';  // URL utilisée pour communiquer avec l'API
+                                        // api/magasin get tout
 
-  httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }; //J'ai suvi la doc Angular (je l'ai mise dans le README)
-  courses$: Observable<any[]>; //Inutile, simple variable de test pour controler ce que fait ma méthode getMagasin
+  httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
-  constructor(private http: HttpClient) { //Constructeur inutile, c'était pour mes tests, et rendre http dispo dans le tout le foutoir
-  	super(); //inutile aussi, mais puisque héritage j'étais forcé de déclarer super();
+  constructor(private http: HttpClient) {
+    super();
   }
 
-  getMagasin(id: string): Observable<any> { //Le coeur du boulot, définir une méthode permettant de get mes magasins définis en DB. J'ai suivi la fucking doc again.
+  getMagasin(id: string): Observable<any> {
     const url = `${this.magasinUrl}/${id}`;
     return this.http.get<any>(url).pipe(
       tap(_ => this.myLog(`fetched magasin id=${id}`)),
-      catchError(this.handleError<any>(`getMagasin id=${id}`))
+      catchError(this.handleError<any>(`getMagasin id=${id}`)),
     );
   }
 
-  data = [{ //Les Dummy Datas actuellement utilisées. La finalité c'est de renvoyer un tableau identique dans getData, mais issue d'un http.get obviously
+  data = [{
     magasin: 'CERGY_ENTREPOT',
     libelle: 'Stock Cergy',
     site: 'Cergy',
     pays: 'France',
     responsable: 'LeuNoeleeste',
     stock_val: '120 euros',
-  },{
+  }, {
     magasin: 'NICE_ENTREPOT',
     libelle: 'Stock Nice',
     site: 'Nice',
     pays: 'France',
     responsable: 'Spames',
     stock_val: '420 euros',
-  },{
+  }, {
     magasin: 'EVRY_ENTREPOT',
     libelle: 'Stock Evry',
     site: 'Evry',
@@ -47,14 +47,18 @@ export class MagasinService extends MagasinData { //Le service qui permet de gé
     stock_val: '30 euros',
   }];
 
-  getData() { //Le diamant de la couronne. Quand t'as une methode test qui marche, il faudra la renommer getData, puisque c'est ce qui est envoyé au component
-  	this.courses$ = this.getMagasin('5fa04de25e2ca7192497a4fb');
-  	console.log(this.courses$); //Nope erreur en console, le test a chié pour X raison
-    return this.data;
+  getData(): any {
+    return this.http.get<any>('/api/magasin')
+      .subscribe((res: any) => {
+        const resS = JSON.stringify(res);
+        const tab = resS.split('[');
+        const resA = tab[1] + tab[2] + tab[3] + tab[4];
+        const resF = resA.substr(0, resA.length - 2);
+        const res2 = "[" + resF + "]";
+        console.log(res2);
+        return res2;
+      });
   }
-
-
-//BLABLAH méthodes reprises de la doc Angular
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
