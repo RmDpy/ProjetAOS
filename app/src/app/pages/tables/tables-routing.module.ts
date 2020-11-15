@@ -10,7 +10,11 @@ import { HistoriqueComponent } from './historique/historique.component';
 import { MagasinComponent } from './magasin/magasin.component';
 import { ArticleComponent } from './article/article.component';
 import { FournisseurComponent } from './fournisseur/fournisseur.component';
+<<<<<<< HEAD
 import { MembreComponent } from './membre/membre.component';
+=======
+import { UtilisateurComponent } from './utilisateur/utilisateur.component';
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
 import { RoleComponent } from './role/role.component';
 
 const routes: Routes = [{
@@ -54,8 +58,13 @@ const routes: Routes = [{
       component: FournisseurComponent,
     },
     {
+<<<<<<< HEAD
       path: 'membre',
       component: MembreComponent,
+=======
+      path: 'utilisateur',
+      component: UtilisateurComponent,
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
     },
   ],
 }];
@@ -76,6 +85,10 @@ export const routedComponents = [
   MagasinComponent,
   ArticleComponent,
   FournisseurComponent,
+<<<<<<< HEAD
   MembreComponent,
+=======
+  UtilisateurComponent,
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
   RoleComponent,
 ];

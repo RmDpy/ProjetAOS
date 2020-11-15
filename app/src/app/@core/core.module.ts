@@ -73,6 +73,7 @@ import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
 import { SecurityCamerasService } from './mock/security-cameras.service';
 import { MockDataModule } from './mock/mock-data.module';
 
+<<<<<<< HEAD
 //CORE MODULES AOS SERVICE ACTUALLY USED DEB ----------------------------------------------------------------------------------------
 import { AosArticleService } from './data/aos_data_services/aos-article.service';
 import { AosMagasinService } from './data/aos_data_services/aos-magasin.service';
@@ -84,6 +85,8 @@ import { AosStockService } from './data/aos_data_services/aos-stock.service';
 import { AosTransfertService } from './data/aos_data_services/aos-transfert.service';
 //CORE MODULES AOS SERVICE ACTUALLY USED FIN ----------------------------------------------------------------------------------------
 
+=======
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
 const socialLinks = [
   {
     url: 'https://github.com/akveo/nebular',

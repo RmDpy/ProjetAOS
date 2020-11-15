@@ -1,14 +1,24 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { IMagasinTab } from 'app/@core/data/aos_data_models/magasin.model';
 import { AosMagasinService } from 'app/@core/data/aos_data_services/aos-magasin.service';
 import { LocalDataSource } from 'ng2-smart-table';
+=======
+import { Component } from '@angular/core';
+import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui permet de gérer les données locales
+import { MagasinData } from '../../../@core/data/aos_data/magasin'; //Source des données - actuellement entrées en dur, va checker ce fichier
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
 
 @Component({
   selector: 'ngx-magasin',
   templateUrl: './magasin.component.html',
   styleUrls: ['./magasin.component.scss'],
 })
+<<<<<<< HEAD
 export class MagasinComponent implements OnInit {
+=======
+export class MagasinComponent {
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
 
   settings = {
     actions: {
@@ -18,17 +28,27 @@ export class MagasinComponent implements OnInit {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+<<<<<<< HEAD
       confirmCreate: true, //Obligatoire pour faire comprendre à la template qu'on passe par nos propres fonctions
+=======
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
     },
     edit: {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+<<<<<<< HEAD
       confirmSave: true, //Obligatoire pour faire comprendre à la template qu'on passe par nos propres fonctions
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true, //Obligatoire pour faire comprendre à la template qu'on passe par nos propres fonctions
+=======
+    },
+    delete: {
+      deleteButtonContent: '<i class="nb-trash"></i>',
+      confirmDelete: true,
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
     },
     columns: {
       magasin: {
@@ -58,6 +78,7 @@ export class MagasinComponent implements OnInit {
     },
   };
 
+<<<<<<< HEAD
   source: LocalDataSource = new LocalDataSource();
   sourceRes$: IMagasinTab; //Permet de définir le type attendu pour res = L'interface correspondante à notre model
   
@@ -82,12 +103,26 @@ export class MagasinComponent implements OnInit {
             this.source.remove(event.data); //Retire les données appropriées de la source de données
           }
         });
+=======
+  source: LocalDataSource = new LocalDataSource(); //Declare une nouvelle source de données locales
+
+  constructor(private service: MagasinData) { //Param le service depuis lequel on va charger nos données
+    const data = this.service.getData(); //Call la méthode du service supposée gérer le http.get du bordel
+    
+    this.source.load(data); //Utilise le bullshit fourni par la template pour charger le résultat dans notre table
+  }
+
+  onDeleteConfirm(event): void {
+    if (window.confirm('Voulez-vous vraiment supprimer ?')) {
+      event.confirm.resolve();
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
     } else {
       event.confirm.reject();
     }
   }
 
   onCustomStock(event): void {
+<<<<<<< HEAD
     //var id = event.data.id; 
     //window.location.href = "/pages/tables/stock";
     //this.router.navigate("/pages/tables/stock");
@@ -120,3 +155,11 @@ export class MagasinComponent implements OnInit {
   }
 
 }
+=======
+    var id = event.data.id;
+    window.location.href = "/pages/tables/stock";
+    //this.router.navigate("/pages/tables/stock");
+  }
+
+}
+>>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a

@@ -1,13 +1,7 @@
 @import '../../../@theme/styles/themes';
 
 @include nb-install-component() {
-
   nb-card {
     transform: translate3d(0, 0, 0);
   }
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
 }
