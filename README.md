@@ -40,7 +40,6 @@ Le coeur du projet étant son API, le starter-kit de Nebular a été utilisé co
 
 ## TODO - Par priorité
 
-<<<<<<< HEAD
 1) Modifier l'API pour prendre en charge le module auth fourni par Nebular - Optionnel, recommandé
 	* Possible de faire notre propre module auth, mais puisque c'est fourni, c'est plus propre...
 
@@ -55,26 +54,6 @@ Le coeur du projet étant son API, le starter-kit de Nebular a été utilisé co
 6) Modifier l'API pour prendre en charge les indicateurs factices du Tableau de Bord - Optionnel
 
 7) Gros nettoyage de l'APP pour débloater le projet de toutes les dépendencies et fichiers non utilisés de Nebular
-=======
-1) Intégrer Backend = Remplacer le chargement des Dummy Datas de l'APP par des traitements sur la DB
-	* Voir le component Magasin de l'APP, commenté pour décrire d'ou sorte les Dummy Datas
-
-2) Modifier l'API pour prendre en charge le module auth fourni par Nebular - Optionnel, recommandé
-	* Possible de faire notre propre module auth, mais puisque c'est fourni, c'est plus propre...
-
-3) Gestion des permissions selon le rôle accordé à l'utilisateur (parmi la liste de rôles disponibles)
-
-4) Ajouter une page "Mon Compte" pour permettre à l'utilisateur de voir son profile et le modifier
-
-5) Affiner la logique de certains modules (surtout Transferts, Historique, Magasin, Stock)
-
-6) Ajouter AJAX - Dans une table, des suggestions d'affichent conformément à notre input et à la DB
-
-7) Modifier l'API pour prendre en charge les indicateurs factices du Tableau de Bord - Optionnel
-
-8) Gros nettoyage de l'APP pour débloater le projet de toutes les dépendencies et fichiers non utilisés de Nebular
->>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
-
 
 
 
