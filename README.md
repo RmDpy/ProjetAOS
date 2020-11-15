@@ -5,7 +5,7 @@ Le projet comprend une API en Node et une APP en Angular. L'intégration de l'AP
 
 ## Installation
 
-**API :** Executer ``npm install`` puis ``nodemon server.ts``
+**API :** Executer ``npm install`` puis ``npm run dev``
 	* Résultat sur localhost:8080 (Tout navigateur)
 
 **APP :** Executer ``npm install`` puis ``npm start``
