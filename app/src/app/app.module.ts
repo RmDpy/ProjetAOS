@@ -11,10 +11,7 @@ import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-<<<<<<< HEAD
 import { AuthGuard } from './auth-guard.service';
-=======
->>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -44,12 +41,9 @@ import {
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
   ],
-<<<<<<< HEAD
   providers: [
     AuthGuard,
   ],
-=======
->>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
   bootstrap: [AppComponent],
 })
 export class AppModule {

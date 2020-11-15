@@ -56,10 +56,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Membres',
     icon: 'people-outline',
-<<<<<<< HEAD
     link: '/pages/tables/membre',
-=======
-    link: '/pages/tables/utilisateur',
->>>>>>> fd15066c874cb0c6edfa303a893fc657ee47f75a
   },
 ];
