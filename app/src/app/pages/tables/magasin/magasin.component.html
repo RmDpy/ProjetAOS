@@ -1,0 +1,14 @@
+<!-- Tableau des généralités sur les différents magasins -->
+<nb-card>
+  <nb-card-header>Magasins</nb-card-header>
+  <nb-card-body>
+    <ng2-smart-table 
+      [settings]="settings" 
+      [source]="source" 
+      (custom)="onCustomStock($event)"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (createConfirm)="onCreateConfirm($event)"
+      (editConfirm)="onEditConfirm($event)">
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
