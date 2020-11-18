@@ -13,11 +13,11 @@ import { AuthGuard } from './auth-guard.service';
 export const routes: Routes = [
   {
     path: 'pages',
-    //canActivate: [AuthGuard], // here we tell Angular to check the access with our AuthGuard. Decommente cette ligne pour tester
+    // canActivate: [AuthGuard], // here we tell Angular to check the access with our AuthGuard. Decommente cette ligne pour tester
     loadChildren: () => import('./pages/pages.module')
       .then(m => m.PagesModule),
   },
-  {
+  /*{
     path: 'auth',
     component: NbAuthComponent,
     children: [
@@ -46,7 +46,7 @@ export const routes: Routes = [
         component: NbResetPasswordComponent,
       },
     ],
-  },
+  },*/
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
 ];

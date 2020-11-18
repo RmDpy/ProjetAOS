@@ -22,6 +22,13 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 
+const formSetting: any = {
+  redirectDelay: 0,
+  showMessages: {
+    success: true,
+  },
+};
+
 @NgModule({
   declarations: [AppComponent],
   imports: [

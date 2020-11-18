@@ -26,6 +26,5 @@ export class MembreRoutes {
         app.delete('/api/membre/:id', (req: Request, res: Response) => {
             this.membre_controller.delete_membre(req, res);
         });
-
     }
 }

@@ -25,5 +25,4 @@ export default class MembreService {
         const query = { _id: _id };
         membres.deleteOne(query, callback);
     }
-
 }

@@ -11,6 +11,7 @@ import { RoleRoutes } from "../routes/role_routes";
 import { MembreRoutes } from "../routes/membre_routes";
 import { StockRoutes } from "../routes/stock_routes";
 import { CommonRoutes } from "../routes/common_routes";
+import { Auth } from "../auth/auth";
 
 class App {
 
@@ -26,6 +27,7 @@ class App {
    private membre_routes: MembreRoutes = new MembreRoutes();
    private stock_routes: StockRoutes = new StockRoutes();
    private common_routes: CommonRoutes = new CommonRoutes();
+   private auth: Auth = new Auth();
 
    constructor() {
       this.app = express();
@@ -40,6 +42,7 @@ class App {
       this.role_routes.route(this.app);
       this.stock_routes.route(this.app);
       this.common_routes.route(this.app);
+      this.auth.route(this.app)
    }
 
    private config(): void {

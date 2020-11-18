@@ -10,7 +10,7 @@ export class MembreController {
 
     public create_membre(req: Request, res: Response) {
         // this check whether all the filds were send through the erquest or not
-        if (req.body.utilisateur && req.body.prenom && req.body.nom && req.body.email && req.body.role && req.body.organisation && req.body.date_fin && req.body.etat) {
+        if (req.body.utilisateur && req.body.prenom && req.body.nom && req.body.email && req.body.role && req.body.organisation && req.body.date_fin && req.body.etat && req.body.password) {
             const membre_params: IMembre = {
                 utilisateur: req.body.utilisateur,
                 prenom: req.body.prenom,
@@ -24,7 +24,9 @@ export class MembreController {
                     modified_on: new Date(Date.now()),
                     modified_by: null,
                     modification_note: 'New membre created'
-                }]
+                }],
+                password: req.body.password
+
             };
             this.membre_service.createMembre(membre_params, (err: any, membre_data: IMembre) => {
                 if (err) {
@@ -54,6 +56,21 @@ export class MembreController {
         }
     }
 
+    public getMembreEmailMdp(req: Request, res: Response) {
+        if (req.body.mail && req.body.mdp) {
+            const membre_filter = {email: req.body.mail, password: req.body.mdp};
+            this.membre_service.filterMembre(membre_filter, (err:any, membre_data: IMembre) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter membre is successfull', membre_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
     public get_all_membre(req: Request, res: Response) {
 	    this.membre_service.retrieveMembre((err: any, membre_data: IMembre) => {
 	    	if (err) {
@@ -65,7 +82,7 @@ export class MembreController {
     }
 
     public update_membre(req: Request, res: Response) {
-        if (req.params.id && req.body.utilisateur || req.body.prenom || req.body.nom || req.body.email || req.body.role || req.body.organisation || req.body.date_fin || req.body.etat) {
+        if (req.params.id && req.body.utilisateur || req.body.prenom || req.body.nom || req.body.email || req.body.role || req.body.organisation || req.body.date_fin || req.body.etat || req.body.password) {
             const membre_filter = { _id: req.params.id };
             this.membre_service.filterMembre(membre_filter, (err: any, membre_data: IMembre) => {
                 if (err) {
@@ -87,7 +104,8 @@ export class MembreController {
                         date_fin: req.body.date_fin ? req.body.date_fin : membre_data.date_fin,
                         etat: req.body.etat ? req.body.etat : membre_data.etat,
                         is_deleted: req.body.is_deleted ? req.body.is_deleted : membre_data.is_deleted,
-                        modification_notes: membre_data.modification_notes
+                        modification_notes: membre_data.modification_notes,
+                        password: req.body.password ? req.body.password : membre_data.password
                     };
                     this.membre_service.updateMembre(membre_params, (err: any) => {
                         if (err) {
