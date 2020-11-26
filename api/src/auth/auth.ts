@@ -10,7 +10,7 @@ export class Auth {
 
     public route(app: Application){
         app.post('/api/login', (req: Request, res: Response) => {
-            this.membre_controller.getMembreEmailMdp(req, res);
+            this.membre_controller.authenticate_membre(req, res);
         })
     }
 }

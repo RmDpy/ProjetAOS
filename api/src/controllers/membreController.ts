@@ -56,19 +56,10 @@ export class MembreController {
         }
     }
 
-    public getMembreEmailMdp(req: Request, res: Response) {
-        if (req.body.mail && req.body.mdp) {
-            const membre_filter = {email: req.body.mail, password: req.body.mdp};
-            this.membre_service.filterMembre(membre_filter, (err:any, membre_data: IMembre) => {
-                if (err) {
-                    mongoError(err, res);
-                } else {
-                    successResponse('Filter membre is successfull', membre_data, res);
-                }
-            });
-        } else {
-            insufficientParameters(res);
-        }
+    public authenticate_membre(req: Request, res: Response) {
+        console.log(req.body);
+        console.log("controller getmembreemailmdp");
+        console.log(this.membre_service.authenticate(req.body));
     }
 
     public get_all_membre(req: Request, res: Response) {

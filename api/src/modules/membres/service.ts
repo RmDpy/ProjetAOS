@@ -25,4 +25,16 @@ export default class MembreService {
         const query = { _id: _id };
         membres.deleteOne(query, callback);
     }
+
+    public authenticate({mail, mdp}){
+        console.log('authenticate service');
+        const user = membres.findOne({mail, mdp});
+        if (user){
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
 }
