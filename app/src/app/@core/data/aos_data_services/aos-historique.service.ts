@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class AosHistoriqueService {
 
-  private historiqueUrl = 'api/historique'; 
+  private historiqueUrl = 'api/historique';
+  private transfertData: object; //Permet de faire communiquer les components Historique et Transfert
 
   httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 

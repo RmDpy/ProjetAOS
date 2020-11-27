@@ -1,15 +1,12 @@
+<!-- Affichage des alertes selon erreur -->
+<ng-container *ngIf="isAlertTriggered">
+  <nb-alert status="{{alert.status}}" closable (close)="onClosingAlert()">{{alert.text}}</nb-alert>
+</ng-container>
+<!-- Tableau des généralités sur les différentes traces de l'historique -->
 <nb-card>
-  <nb-card-header>
-    Historique du stock
-  </nb-card-header>
-
+  <nb-card-header>Historique du stock</nb-card-header>
   <nb-card-body>
-    <ng2-smart-table 
-      [settings]="settings" 
-      [source]="source" 
-      (deleteConfirm)="onDeleteConfirm($event)"
-      (createConfirm)="onCreateConfirm($event)"
-      (editConfirm)="onEditConfirm($event)">
+    <ng2-smart-table [settings]="settings" [source]="source" >
     </ng2-smart-table>
   </nb-card-body>
 </nb-card>

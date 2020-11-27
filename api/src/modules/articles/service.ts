@@ -12,8 +12,8 @@ export default class ArticleService {
         articles.findOne(query, callback);
     }
 
-    public retrieveArticle(query: any) {
-        articles.find(query);
+    public retrieveArticle(query: any, callback: any) {
+        articles.find(query, callback);
     }
 
     public updateArticle(article_params: IArticle, callback: any) {

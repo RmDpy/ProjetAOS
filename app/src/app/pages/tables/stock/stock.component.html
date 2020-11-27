@@ -1,3 +1,8 @@
+<!-- Affichage des alertes selon erreur -->
+<ng-container *ngIf="isAlertTriggered">
+  <nb-alert status="{{alert.status}}" closable (close)="onClosingAlert()">{{alert.text}}</nb-alert>
+</ng-container>
+<!-- Tableau des généralités sur les différents articles en stock -->
 <nb-card>
   <nb-card-header>Stock - Magasin</nb-card-header>
   <nb-card-body>

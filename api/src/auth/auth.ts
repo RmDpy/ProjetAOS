@@ -1,6 +1,6 @@
 import { mongoose } from 'mongoose'
 import {Application, Request, Response} from "express";
-import jwt = require('jsonwebtoken');
+//import jwt = require('jsonwebtoken');
 import { MembreController } from '../controllers/membreController';
 
 
@@ -10,7 +10,7 @@ export class Auth {
 
     public route(app: Application){
         app.post('/api/login', (req: Request, res: Response) => {
-            this.membre_controller.authenticate_membre(req, res);
+            //this.membre_controller.authenticate_membre(req, res);
         })
     }
 }

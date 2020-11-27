@@ -53,7 +53,8 @@ export class RoleController {
     }
 
     public get_all_role(req: Request, res: Response) {
-        this.role_service.retrieveRole((err: any, role_data: IRole) => {
+        const role_filter = req.params;
+        this.role_service.retrieveRole(role_filter, (err: any, role_data: IRole) => {
             if (err) {
                 mongoError(err, res);
             } else {

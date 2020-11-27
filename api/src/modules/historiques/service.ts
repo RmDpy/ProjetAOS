@@ -12,8 +12,8 @@ export default class HistoriqueService {
         historiques.findOne(query, callback);
     }
 
-    public retrieveHistorique(query: any) {
-        historiques.find(query);
+    public retrieveHistorique(query: any, callback: any) {
+        historiques.find(query, callback);
     }
 
     public updateHistorique(historique_params: IHistorique, callback: any) {

@@ -12,7 +12,7 @@ export class HistoriqueController {
         // this check whether all the filds were send through the erquest or not
         if (req.body.reference && req.body.libelle && req.body.mouvement && req.body.quantite && req.body.magasin && req.body.emplacement && req.body.num_bon) {
             const historique_params: IHistorique = {
-                date: new Date(Date.now()),
+                date: this.generateDateNow(new Date(Date.now())),
                 reference: req.body.reference,
                 libelle: req.body.libelle,
                 mouvement: req.body.mouvement,
@@ -55,7 +55,8 @@ export class HistoriqueController {
     }
 
     public get_all_historique(req: Request, res: Response) {
-	    this.historique_service.retrieveHistorique((err: any, historique_data: IHistorique) => {
+        const historique_filter = req.params;
+	    this.historique_service.retrieveHistorique(historique_filter, (err: any, historique_data: IHistorique) => {
 	    	if (err) {
 	    		mongoError(err, res);
 	    	} else {
@@ -120,4 +121,21 @@ export class HistoriqueController {
             insufficientParameters(res);
         }
     }
+
+    generateDateNow(date_ob): string{
+        // adjust 0 before single digit date
+        let day = ("0" + date_ob.getDate()).slice(-2);
+        // current month
+        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+        // current year
+        let year = date_ob.getFullYear();
+        // current hours
+        let hours = date_ob.getHours();
+        // current minutes
+        let minutes = date_ob.getMinutes();
+        // current seconds
+        let seconds = date_ob.getSeconds();
+        //final result
+        return day + "-" + month + "-" + year + " (" + hours + ":" + minutes + ":" + seconds + ")";
+      }
 }

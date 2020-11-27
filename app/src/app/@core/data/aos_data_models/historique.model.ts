@@ -1,6 +1,6 @@
 export interface IHistorique {
     _id?: String;
-    date: Date;
+    date: String;
     reference: String;
     libelle: String;
     mouvement: String;

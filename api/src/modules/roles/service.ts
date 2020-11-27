@@ -12,8 +12,8 @@ export default class RoleService {
         roles.findOne(query, callback);
     }
 
-    public retrieveRole(query: any) {
-        roles.find(query);
+    public retrieveRole(query: any, callback: any) {
+        roles.find(query, callback);
     }
 
     public updateRole(role_params: IRole, callback: any) {

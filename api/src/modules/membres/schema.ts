@@ -16,8 +16,7 @@ const schema = new Schema({
         type: Boolean,
         default: false
     },
-    modification_notes: [ModificationNote],
-    password: String
+    modification_notes: [ModificationNote]
 });
 
 export default mongoose.model('membres', schema);

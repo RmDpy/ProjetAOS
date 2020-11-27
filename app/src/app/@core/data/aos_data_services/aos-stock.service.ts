@@ -13,19 +13,18 @@ export class AosStockService {
   constructor(private http: HttpClient) { }
 
   getData(): any {
-    return this.http.get(this.stockUrl)
+    return this.http.get(this.stockUrl);
   }
 
-  setData(data:any): any {
+  setData(data: any): any {
     return this.http.post(this.stockUrl, data);
   }
 
-  deleteData(id:any): any {
-    console.log(id);
+  deleteData(id: any): any {
     return this.http.delete(this.stockUrl + '/' + id);
   }
 
-  updateData(id:any, data:any): any {
+  updateData(id: any, data: any): any {
     return this.http.put(this.stockUrl + '/' + id, data);
   }
 }

@@ -12,8 +12,8 @@ export default class MembreService {
         membres.findOne(query, callback);
     }
 
-    public retrieveMembre(query: any) {
-        membres.find(query);
+    public retrieveMembre(query: any, callback: any) {
+        membres.find(query, callback);
     }
 
     public updateMembre(membre_params: IMembre, callback: any) {
@@ -26,15 +26,4 @@ export default class MembreService {
         membres.deleteOne(query, callback);
     }
 
-    public authenticate({mail, mdp}){
-        console.log('authenticate service');
-        const user = membres.findOne({mail, mdp});
-        if (user){
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
 }

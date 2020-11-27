@@ -53,13 +53,14 @@ export class ArticleController {
     }
 
     public get_all_article(req: Request, res: Response) {
-            this.article_service.retrieveArticle((err: any, article_data: IArticle) => {
-                if (err) {
-                    mongoError(err, res);
-                } else {
-                    successResponse('Retrieve article is successfull', article_data, res);
-                }
-            });
+        const article_filter = req.params;
+        this.article_service.retrieveArticle(article_filter, (err: any, article_data: IArticle) => {
+            if (err) {
+                mongoError(err, res);
+            } else {
+                successResponse('Retrieve article is successfull', article_data, res);
+            }
+        });
     }
 
     public update_article(req: Request, res: Response) {

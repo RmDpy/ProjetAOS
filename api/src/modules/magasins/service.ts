@@ -12,8 +12,8 @@ export default class MagasinService {
         magasins.findOne(query, callback);
     }
 
-    public retrieveMagasin(query: any) {
-        magasins.find(query);
+    public retrieveMagasin(query: any, callback: any) {
+        magasins.find(query, callback);
     }
 
     public updateMagasin(magasin_params: IMagasin, callback: any) {

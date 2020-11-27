@@ -16,6 +16,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/tables/magasin',
   },
   {
+    title: 'Stocks',
+    icon: 'archive-outline',
+    link: '/pages/tables/stock',
+  },
+  {
     title: 'Transferts de stock',
     icon: 'shuffle-outline',
     link: '/pages/tables/transfert',

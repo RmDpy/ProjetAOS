@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { IHistoriqueTab } from 'app/@core/data/aos_data_models/historique.model';
+import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosHistoriqueService } from 'app/@core/data/aos_data_services/aos-historique.service';
 import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui permet de gérer les données locales
 
@@ -11,26 +13,12 @@ import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui
 export class HistoriqueComponent implements OnInit {
 
   settings = {
-    add: {
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-      confirmCreate: true,
-    },
-    edit: {
-      editButtonContent: '<i class="nb-edit"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true,
-    },
-    delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true,
-    },
+    add: false,
+    actions: false,
     columns: {
       date: {
         title: 'Date',
-        type: 'date',
+        type: 'string',
       },
       reference: {
         title: 'Référence',
@@ -42,11 +30,15 @@ export class HistoriqueComponent implements OnInit {
       },
       mouvement: {
         title: 'Mouvement',
-        type: 'string',
+        type: 'html',
+        valuePrepareFunction: ((mouvement) => {
+          return `<div class="${this.getCellClass(mouvement)}"><strong>${mouvement}</strong></div>`;
+        }),
       },
       quantite: {
         title: 'Qté',
         type: 'number',
+        width: '5%',
       },
       magasin: {
         title: 'Magasin',
@@ -55,6 +47,7 @@ export class HistoriqueComponent implements OnInit {
       emplacement: {
         title: 'Emplacement',
         type: 'string',
+        width: '10%',
       },
       num_bon: {
         title: 'Bon n°',
@@ -65,55 +58,27 @@ export class HistoriqueComponent implements OnInit {
 
   source: LocalDataSource = new LocalDataSource();
   sourceRes$: IHistoriqueTab;
+  alert: object;
+  isAlertTriggered: boolean;
 
-  constructor(private service: AosHistoriqueService) { }
+  constructor(private service: AosHistoriqueService, private error: AosErrorService) { }
   
   ngOnInit(): void {
-    this.service.getData()
-    .subscribe((res: IHistoriqueTab) => {
+    this.service.getData() //Traces de mouvements indélébiles = Historique charge les datas. Pas d'altération possible EDIT/DELETE
+    .subscribe(
+      (res: IHistoriqueTab) => {
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
+    },(err: HttpErrorResponse) => {
+      this.isAlertTriggered = true;                             
+      this.alert = this.error.errorHandler(err.status, err.statusText);
     });
   }
 
-  onDeleteConfirm(event): void {
-    if (window.confirm('Voulez-vous vraiment supprimer cet article ?')) {
-      this.service.deleteData(event.data._id)
-        .subscribe((res: IHistoriqueTab) => {
-          console.log(res.STATUS);
-          if(res.STATUS === 'SUCCESS'){
-            event.confirm.resolve(event.data);
-            this.source.remove(event.data);
-          }
-        });
-    } else {
-      event.confirm.reject();
-    }
-  }
-
-  onCreateConfirm(event): void {
-    this.service.setData(event.newData)
-      .subscribe((res: IHistoriqueTab) => {
-        console.log(res.STATUS);
-        if(res.STATUS === 'SUCCESS'){
-          event.confirm.resolve(event.newData);
-          this.source.refresh();
-        } else {
-          event.confirm.reject();
-        }
-      });
-  }
-
-  onEditConfirm(event): void {
-    this.service.updateData(event.data._id, event.newData)
-      .subscribe((res: IHistoriqueTab) => {
-        console.log(res.STATUS);
-        if(res.STATUS === 'SUCCESS'){
-          event.confirm.resolve(event.newData);
-          this.source.update(event.data, event.newData);
-        } else {
-          event.confirm.reject();
-        }
-      });
+  getCellClass(typeMouvement): string{
+    if(typeMouvement === "Entrée")
+      return "inStock";
+    if(typeMouvement === "Sortie")
+    return "outStock";
   }
 }

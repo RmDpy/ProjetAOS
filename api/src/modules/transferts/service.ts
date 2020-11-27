@@ -12,8 +12,8 @@ export default class TransfertService {
         transferts.findOne(query, callback);
     }
 
-    public retrieveTransfert(query: any) {
-        transferts.find(query);
+    public retrieveTransfert(query: any, callback: any) {
+        transferts.find(query, callback);
     }
 
     public updateTransfert(transfert_params: ITransfert, callback: any) {

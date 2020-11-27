@@ -11,8 +11,16 @@ export class StockRoutes {
             this.stock_controller.create_stock(req, res);
         });
 
+        app.get('/api/stock', (req: Request, res: Response) => {
+            this.stock_controller.get_all_stock(req, res);
+        });
+
         app.get('/api/stock/:id', (req: Request, res: Response) => {
-            this.stock_controller.get_stock(req, res);
+            this.stock_controller.get_stock_by_id(req, res);
+        });
+
+        app.get('/api/stock/magasin/:magasin_id', (req: Request, res: Response) => {
+            this.stock_controller.get_stock_by_magasin(req, res);
         });
 
         app.put('/api/stock/:id', (req: Request, res: Response) => {

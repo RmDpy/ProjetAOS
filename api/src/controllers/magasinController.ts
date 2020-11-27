@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { insufficientParameters, mongoError, successResponse, failureResponse } from '../modules/common/service';
 import { IMagasin } from '../modules/magasins/model';
+import { IStock } from '../modules/stocks/model';
 import MagasinService from '../modules/magasins/service';
+import StockService from '../modules/stocks/service';
 import e = require('express');
 
 export class MagasinController {
@@ -53,7 +55,8 @@ export class MagasinController {
     }
 
     public get_all_magasin(req: Request, res: Response) {
-    	this.magasin_service.retrieveMagasin((err: any, magasin_data: IMagasin) => {
+        const magasin_filter = req.params;
+    	this.magasin_service.retrieveMagasin(magasin_filter, (err: any, magasin_data: IMagasin) => {
 	    	if (err) {
 	    		mongoError(err, res);
 	    	} else {

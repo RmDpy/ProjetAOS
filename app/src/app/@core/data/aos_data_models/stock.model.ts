@@ -1,5 +1,6 @@
 export interface IStock {
     _id?: String;
+    magasin: String;
     emplacement: String;
     etat: String;
     reference: String;

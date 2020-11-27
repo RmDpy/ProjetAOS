@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     reference: String,
     libelle: String,
-    quantite: String,
+    quantite: Number,
     mag_fournisseur: String,
     mag_demandeur: String,
     emplacement: String,

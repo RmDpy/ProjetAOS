@@ -11,6 +11,5 @@ export interface IMembre {
     date_fin: String;
     etat: String;
     is_deleted?: Boolean;
-    modification_notes: ModificationNote[];
-    password: String;
+    modification_notes: ModificationNote[]
 }

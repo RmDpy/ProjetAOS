@@ -12,8 +12,8 @@ export default class FournisseurService {
         fournisseurs.findOne(query, callback);
     }
 
-    public retrieveFournisseur(query: any) {
-        fournisseurs.find(query);
+    public retrieveFournisseur(query: any, callback: any) {
+        fournisseurs.find(query, callback);
     }
 
     public updateFournisseur(fournisseur_params: IFournisseur, callback: any) {

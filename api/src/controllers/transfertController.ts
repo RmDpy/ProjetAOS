@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 import { insufficientParameters, mongoError, successResponse, failureResponse } from '../modules/common/service';
 import { ITransfert } from '../modules/transferts/model';
 import TransfertService from '../modules/transferts/service';
+//import { HistoriqueController } from './historiqueController';
 import e = require('express');
 
 export class TransfertController {
 
     private transfert_service: TransfertService = new TransfertService();
+    //private historique_controller: HistoriqueController = new HistoriqueController();
 
     public create_transfert(req: Request, res: Response) {
         // this check whether all the filds were send through the erquest or not
@@ -55,7 +57,8 @@ export class TransfertController {
     }
 
    public get_all_transfert(req: Request, res: Response) {
-        this.transfert_service.retrieveTransfert((err: any, transfert_data: ITransfert) => {
+        const transfert_filter = req.params;
+        this.transfert_service.retrieveTransfert(transfert_filter, (err: any, transfert_data: ITransfert) => {
             if (err) {
                 mongoError(err, res);
             } else {

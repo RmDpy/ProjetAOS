@@ -1,8 +1,10 @@
+<!-- Affichage des alertes selon erreur -->
+<ng-container *ngIf="isAlertTriggered">
+  <nb-alert status="{{alert.status}}" closable (close)="onClosingAlert()">{{alert.text}}</nb-alert>
+</ng-container>
+<!-- Tableau des généralités sur les différents transferts -->
 <nb-card>
-  <nb-card-header>
-    Transferts
-  </nb-card-header>
-
+  <nb-card-header>Transferts</nb-card-header>
   <nb-card-body>
     <ng2-smart-table 
     [settings]="settings" 

@@ -10,8 +10,9 @@ export class StockController {
 
     public create_stock(req: Request, res: Response) {
         // this check whether all the filds were send through the erquest or not
-        if (req.body.emplacement && req.body.reference && req.body.libelle && req.body.etat && req.body.stock_qt && req.body.stock_val && req.body.prix) {
+        if (req.body.magasin && req.body.emplacement && req.body.reference && req.body.libelle && req.body.etat && req.body.stock_qt && req.body.stock_val && req.body.prix) {
             const stock_params: IStock = {
+                magasin: req.body.magasin,
                 emplacement: req.body.emplacement,
                 reference: req.body.reference,
                 libelle: req.body.libelle,
@@ -38,14 +39,14 @@ export class StockController {
         }
     }
 
-    public get_stock(req: Request, res: Response) {
+    public get_stock_by_id(req: Request, res: Response) {
         if (req.params.id) {
             const stock_filter = { _id: req.params.id };
             this.stock_service.filterStock(stock_filter, (err: any, stock_data: IStock) => {
                 if (err) {
                     mongoError(err, res);
                 } else {
-                    successResponse('Filter stock is successfull', stock_data, res);
+                    successResponse('Filter stock by id is successfull', stock_data, res);
                 }
             });
         } else {
@@ -53,8 +54,34 @@ export class StockController {
         }
     }
 
+    public get_stock_by_magasin(req: Request, res: Response) {
+        if (req.params.magasin) {
+            const stock_filter = { magasin: req.params.magasin };
+            this.stock_service.filterNumStock(stock_filter, (err: any, stock_data: IStock) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter stock by mag is successfull', stock_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
+    public get_all_stock(req: Request, res: Response) {
+        const stock_filter = req.params;
+        this.stock_service.retrieveStock(stock_filter, (err: any, stock_data: IStock) => {
+            if (err) {
+                mongoError(err, res);
+            } else {
+                successResponse('Retrieve stock is successfull', stock_data, res);
+            }
+        });
+    }
+
     public update_stock(req: Request, res: Response) {
-        if (req.params.id && req.body.emplacement || req.body.reference || req.body.libelle || req.body.etat || req.body.stock_qt || req.body.stock_val || req.body.prix ) {
+        if (req.params.id && req.body.magasin || req.body.emplacement || req.body.reference || req.body.libelle || req.body.etat || req.body.stock_qt || req.body.stock_val || req.body.prix ) {
             const stock_filter = { _id: req.params.id };
             this.stock_service.filterStock(stock_filter, (err: any, stock_data: IStock) => {
                 if (err) {
@@ -67,6 +94,7 @@ export class StockController {
                     });
                     const stock_params: IStock = {
                         _id: req.params.id,
+                        magasin: req.body.magasin ? req.body.magasin : stock_data.magasin,
                         emplacement: req.body.emplacement ? req.body.emplacement : stock_data.emplacement,
                         reference: req.body.reference ? req.body.reference : stock_data.reference,
                         libelle: req.body.libelle ? req.body.libelle : stock_data.libelle,

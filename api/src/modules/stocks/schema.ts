@@ -4,6 +4,7 @@ import { ModificationNote } from '../common/model';
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
+    magasin: String,
     emplacement: String,
     etat: String,
     reference: String,

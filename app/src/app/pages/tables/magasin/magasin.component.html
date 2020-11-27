@@ -1,3 +1,7 @@
+<!-- Affichage des alertes selon erreur -->
+<ng-container *ngIf="isAlertTriggered">
+  <nb-alert status="{{alert.status}}" closable (close)="onClosingAlert()">{{alert.text}}</nb-alert>
+</ng-container>
 <!-- Tableau des généralités sur les différents magasins -->
 <nb-card>
   <nb-card-header>Magasins</nb-card-header>
@@ -5,7 +9,6 @@
     <ng2-smart-table 
       [settings]="settings" 
       [source]="source" 
-      (custom)="onCustomStock($event)"
       (deleteConfirm)="onDeleteConfirm($event)"
       (createConfirm)="onCreateConfirm($event)"
       (editConfirm)="onEditConfirm($event)">

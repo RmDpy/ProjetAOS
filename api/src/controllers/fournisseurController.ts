@@ -54,7 +54,8 @@ export class FournisseurController {
     }
 
     public get_all_fournisseur(req: Request, res: Response) {
-    	this.fournisseur_service.retrieveFournisseur((err: any, fournisseur_data: IFournisseur) => {
+        const fournisseur_filter = req.params;
+    	this.fournisseur_service.retrieveFournisseur(fournisseur_filter, (err: any, fournisseur_data: IFournisseur) => {
         	if (err) {
             	mongoError(err, res);
             } else {

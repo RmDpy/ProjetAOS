@@ -9,8 +9,7 @@ export interface IMembre {
     date_fin: String;
     etat: String;
     is_deleted?: Boolean;
-    modification_notes: any[];
-    password;
+    modification_notes: any[]
 }
 
 export interface IMembreTab {
