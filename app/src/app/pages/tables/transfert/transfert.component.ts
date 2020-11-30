@@ -67,23 +67,10 @@ export class TransfertComponent implements OnInit {
   alert: object;
   isAlertTriggered: boolean;
 
-  dataStock = {
-    "_id": String,
-    "magasin": String,
-    "emplacement": String,
-    "etat": String,
-    "reference": String,
-    "libelle": String,
-    "prix": Number,
-    "stock_qt": Number,
-    "stock_val": Number,
-  };
-
   constructor(private service: AosTransfertService, private stock: AosStockService, private historique: AosHistoriqueService, private error: AosErrorService) { }
   
   ngOnInit(): void {
     this.isAlertTriggered = false;
-    this.dataStock = null;
     this.service.getData()
     .subscribe(
       (res: ITransfertTab) => {
@@ -114,24 +101,9 @@ export class TransfertComponent implements OnInit {
   }
 
   onCreateConfirm(event): void {
-    this.service.setData(event.newData)
-      .subscribe(
-        (res: ITransfertTab) => {
-          event.confirm.resolve(event.newData);
-          var newSortie = this.generateDataHistorique(event.newData, "Sortie");
-          var newEntree = this.generateDataHistorique(event.newData, "Entrée");
-          var newStock = this.verifyCalcNewStock(newEntree, newSortie, event.newData.quantite);
-          //console.log(newStock);
-          if(newStock){
-            this.onCreateHistorique(newSortie);
-            this.onCreateHistorique(newEntree);
-          } else {
-            event.confirm.reject();
-          }
-      },(err: HttpErrorResponse) => {
-        this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, "SET TRANSFERT : " + err.statusText);
-      });
+    var newSortie = this.generateDataHistorique(event.newData, "Sortie");
+    var newEntree = this.generateDataHistorique(event.newData, "Entrée");
+    this.verifyCalcNewStock(event, newEntree, newSortie, event.newData.quantite);
   }
 
   onClosingAlert(): void {
@@ -170,8 +142,19 @@ export class TransfertComponent implements OnInit {
       });  
   }
 
-  onUpdateStock(dataStockID, dataStock): void {
-    this.stock.updateData(dataStockID, dataStock)
+  onCreateTransfert(eventTransfert): void{
+    this.service.setData(eventTransfert.newData)
+    .subscribe(
+      (res: ITransfertTab) => {
+        eventTransfert.confirm.resolve(eventTransfert.newData);
+    },(err: HttpErrorResponse) => {
+      this.isAlertTriggered = true;                             
+      this.alert = this.error.errorHandler(err.status, "SET TRANSFERT : " + err.statusText);
+    });
+  }
+
+  onUpdateStock(dataStock): void {
+    this.stock.updateData(dataStock._id, dataStock)
       .subscribe(
         (res: IStockTab) => {
           console.log(res.STATUS);
@@ -181,53 +164,53 @@ export class TransfertComponent implements OnInit {
       });  
   }
 
-  verifyCalcNewStock(dataEntree, dataSortie, quantiteTransfert): boolean { //Coincé ici
-    var is_stock_valid = false;
-    console.log(JSON.stringify(this.dataStock));
-    var testingDataEntree = this.getDataStock(dataEntree.reference, dataEntree.magasin); //Je voudrais récup mon objet
-    var testingDataSortie = this.getDataStock(dataEntree.reference, dataEntree.magasin);
-    console.log(JSON.stringify(testingDataEntree)); //Et checker si c'est ok ici pour les opérations plus bas
-    /*if (quantiteTransfert <= dataSortie.stock_qt)
-      is_stock_valid = true;
-    else if (quantiteTransfert > dataStockSortie.stock_qt)
-      is_stock_valid = false;
-    if(is_stock_valid){
-      dataStockSortie.stock_qt = dataStockSortie.stock_qt - quantiteTransfert;
-      dataStockEntree.stock_qt = +dataStockEntree.stock_qt + +quantiteTransfert;
-      this.onUpdateStock(dataStockEntree, dataSortie);
-      this.onUpdateStock(dataStockSortie, dataEntree);
-    } else {
-      this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(418, "Le stock du magasin fournisseur est trop faible pour cette opération.");
-    }*/
-    return is_stock_valid;
+  verifyCalcNewStock(eventTransfert, dataEntree, dataSortie, quantiteTransfert): void { //Coincé ici
+    this.stock.getDataID(dataSortie.reference, dataSortie.magasin)
+      .subscribe(
+        (resSortie: IStockTab) => {
+          this.stock.getDataID(dataEntree.reference, dataEntree.magasin)
+            .subscribe(
+              (resEntree: IStockTab) => {
+              if(resEntree.DATA === null || resSortie.DATA === null){
+                this.isAlertTriggered = true;                            
+                this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun stock connu.");
+              } else {
+                  // @ts-ignore
+                if(this.verifyValidtyStock(resSortie.DATA.stock_qt, quantiteTransfert)){
+                  // @ts-ignore
+                  resSortie.DATA.stock_qt = resSortie.DATA.stock_qt - quantiteTransfert;
+                  // @ts-ignore
+                  resEntree.DATA.stock_qt = +resEntree.DATA.stock_qt + +quantiteTransfert;
+                  //Update les Stocks
+                  this.onUpdateStock(resSortie.DATA);
+                  this.onUpdateStock(resEntree.DATA);
+                  //Generate les Mouvements
+                  this.onCreateHistorique(dataEntree);
+                  this.onCreateHistorique(dataSortie);
+                  //Generate Transferts
+                  this.onCreateTransfert(eventTransfert);
+                } else {
+                  this.isAlertTriggered = true;                            
+                  this.alert = this.error.errorHandler(418, "Le stock du magasin fournisseur est trop faible pour cette opération.");
+                }
+              }
+            },(err: HttpErrorResponse) => {
+              this.isAlertTriggered = true;                           
+              this.alert = this.error.errorHandler(err.status, "GET MAGASIN DEMANDEUR : " + err.statusText);
+            }); //fin du second subscribe
+        },(err: HttpErrorResponse) => {
+          this.isAlertTriggered = true;                           
+          this.alert = this.error.errorHandler(err.status, "GET MAGASIN FOURNISSEUR : " + err.statusText);
+        }); //fin du premier subscribe
   }
 
-  getDataStock(dataReference, dataMagasin): void{
-    var sourceStockRes$;
-    this.stock.getDataID(dataReference, dataMagasin)
-      .subscribe(
-        (res: IStockTab) => {
-          sourceStockRes$ = res;
-          if(sourceStockRes$.DATA === null){
-            this.dataStock = null;
-            this.isAlertTriggered = true;                            
-            this.alert = this.error.errorHandler(418, "Les informations fournies ne correspondent à aucun stock existant.");
-          } else {
-            this.dataStock._id = sourceStockRes$.DATA._id;
-            this.dataStock.magasin = sourceStockRes$.DATA.magasin;
-            this.dataStock.emplacement = sourceStockRes$.DATA.emplacement;
-            this.dataStock.etat = sourceStockRes$.DATA.etat;
-            this.dataStock.reference = sourceStockRes$.DATA.reference;
-            this.dataStock.libelle = sourceStockRes$.DATA.libelle;
-            this.dataStock.prix = sourceStockRes$.DATA.prix;
-            this.dataStock.stock_qt = sourceStockRes$.DATA.stock_qt;
-            this.dataStock.stock_val = sourceStockRes$.DATA.stock_val;
-          }
-      },(err: HttpErrorResponse) => {
-        this.isAlertTriggered = true;                           
-        this.alert = this.error.errorHandler(err.status, "GET STOCK : " + err.statusText);
-      });
+  verifyValidtyStock(quantiteStock, quantiteTransfert): boolean{
+    var is_stock_valid: boolean;
+    if (quantiteTransfert <= quantiteStock)
+      is_stock_valid = true;
+    else if (quantiteTransfert > quantiteStock)
+      is_stock_valid = false;
+    return is_stock_valid;
   }
 
   onEditConfirm(event): void {

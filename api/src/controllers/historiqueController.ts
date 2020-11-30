@@ -54,6 +54,21 @@ export class HistoriqueController {
         }
     }
 
+    public get_historique_by_params(req: Request, res: Response) {
+        if (req.params.date && req.params.reference && req.params.magasin && req.params.quantite) {
+            const historique_filter = { date: req.params.date, reference: req.params.reference, magasin: req.params.magasin, quantite: req.params.quantite };
+            this.historique_service.filterHistorique(historique_filter, (err: any, historique_data: IHistorique) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter historique by new params is successfull', historique_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
     public get_all_historique(req: Request, res: Response) {
         const historique_filter = req.params;
 	    this.historique_service.retrieveHistorique(historique_filter, (err: any, historique_data: IHistorique) => {

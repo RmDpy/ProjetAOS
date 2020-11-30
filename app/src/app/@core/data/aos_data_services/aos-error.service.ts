@@ -28,8 +28,7 @@ export class AosErrorService {
         return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+') - Le serveur ne répond plus, veuillez réessayer ultérieurement.');
       }
       case 418: { 
-        console.log('TEA');
-        return this.onTriggeringAlert('danger', 'Erreur '+type+' (I\'m a teapot) - ' + message); //Les alertes customs hors HTTP res de l'application
+        return this.onTriggeringAlert('danger', 'Erreur '+type+' (Custom Error) - ' + message); //Les alertes customs hors HTTP res de l'application
       }         
       default: { 
         return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+' | API ou APP inactive ?) - Une erreur est survenue, réessayer ultérieurement.');
