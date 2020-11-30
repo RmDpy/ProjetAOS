@@ -10,7 +10,7 @@ export class HistoriqueController {
 
     public create_historique(req: Request, res: Response) {
         // this check whether all the filds were send through the erquest or not
-        if (req.body.reference && req.body.libelle && req.body.mouvement && req.body.quantite && req.body.magasin && req.body.emplacement && req.body.num_bon) {
+        if (req.body.reference && req.body.libelle && req.body.mouvement && req.body.quantite && req.body.magasin && req.body.etat && req.body.num_bon) {
             const historique_params: IHistorique = {
                 date: this.generateDateNow(new Date(Date.now())),
                 reference: req.body.reference,
@@ -18,7 +18,7 @@ export class HistoriqueController {
                 mouvement: req.body.mouvement,
                 quantite: req.body.quantite,
                 magasin: req.body.magasin,
-                emplacement: req.body.emplacement,
+                etat: req.body.etat,
                 num_bon: req.body.num_bon,
                 modification_notes: [{
                     modified_on: new Date(Date.now()),
@@ -81,7 +81,7 @@ export class HistoriqueController {
     }
 
     public update_historique(req: Request, res: Response) {
-        if (req.params.id && req.body.date || req.body.reference || req.body.libelle || req.body.mouvement || req.body.quantite || req.body.magasin || req.body.emplacement || req.body.num_bon) {
+        if (req.params.id && req.body.date || req.body.reference || req.body.libelle || req.body.mouvement || req.body.quantite || req.body.magasin || req.body.etat || req.body.num_bon) {
             const historique_filter = { _id: req.params.id };
             this.historique_service.filterHistorique(historique_filter, (err: any, historique_data: IHistorique) => {
                 if (err) {
@@ -100,7 +100,7 @@ export class HistoriqueController {
                         mouvement: req.body.mouvement ? req.body.mouvement : historique_data.mouvement,
                         quantite: req.body.quantite ? req.body.quantite : historique_data.quantite,
                         magasin: req.body.magasin ? req.body.magasin : historique_data.magasin,
-                        emplacement: req.body.emplacement ? req.body.emplacement : historique_data.emplacement,
+                        etat: req.body.etat ? req.body.etat : historique_data.etat,
                         num_bon: req.body.num_bon ? req.body.num_bon : historique_data.num_bon,
                         is_deleted: req.body.is_deleted ? req.body.is_deleted : historique_data.is_deleted,
                         modification_notes: historique_data.modification_notes
@@ -119,6 +119,34 @@ export class HistoriqueController {
         } else {
             insufficientParameters(res);
         }
+    }
+
+    public update_historique_by_magasin(req: Request, res: Response) {
+        const historique_filter = { magasin: req.params.magasin };
+        this.historique_service.filterHistorique(historique_filter, (err: any, historique_data: IHistorique) => {
+            if (err) {
+                mongoError(err, res);
+            } else if (historique_data) {
+                historique_data.modification_notes.push({
+                    modified_on: new Date(Date.now()),
+                    modified_by: null,
+                    modification_note: 'historique data updated by magasin'
+                });
+                const historique_params: any = {
+                    magasin: req.body.magasin ? req.body.magasin : historique_data.magasin,
+                    etat: "Inactif"
+                };
+                this.historique_service.updateVariousHistorique(historique_params, (err: any) => {
+                    if (err) {
+                        mongoError(err, res);
+                    } else {
+                        successResponse('update historique by magasin is successfull', null, res);
+                    }
+                });
+            } else {
+                failureResponse('invalid historique', null, res);
+            }
+        });
     }
 
     public delete_historique(req: Request, res: Response) {

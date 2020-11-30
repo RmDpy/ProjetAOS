@@ -39,11 +39,6 @@ export class StockComponent implements OnInit {
         type: 'string',
         width:'10%',
       },
-      etat: {
-        title: 'Etat',
-        type: 'string',
-        width: '5%',
-      },
       reference: {
         title: 'Référence',
         type: 'string',
@@ -53,7 +48,7 @@ export class StockComponent implements OnInit {
         type: 'string',
       },
       prix: {
-        title: 'Prix Unitaire',
+        title: 'Prix Unitaire (€)',
         type: 'number',
       },
       stock_qt: {
@@ -62,7 +57,7 @@ export class StockComponent implements OnInit {
         width: '5%',
       },
       stock_val: {
-        title: 'Valeur',
+        title: 'Valeur (€)',
         type: 'number',
       },
     },
@@ -118,6 +113,7 @@ export class StockComponent implements OnInit {
         (res: IStockTab) => {
         console.log(res.STATUS);
         if(res.STATUS === 'SUCCESS'){
+          event.newData.stock_val = event.newData.stock_qt * event.newData.prix;
           event.confirm.resolve(event.newData);
           this.source.refresh();
         } else {
@@ -135,6 +131,7 @@ export class StockComponent implements OnInit {
         (res: IStockTab) => {
         console.log(res.STATUS);
         if(res.STATUS === 'SUCCESS'){
+          event.newData.stock_val = event.newData.stock_qt * event.newData.prix;
           event.confirm.resolve(event.newData);
           this.source.update(event.data, event.newData);
         } else {

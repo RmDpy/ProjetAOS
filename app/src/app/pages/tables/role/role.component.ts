@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { IRoleTab } from 'app/@core/data/aos_data_models/role.model';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosRoleService } from 'app/@core/data/aos_data_services/aos-role.service';
-import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui permet de gérer les données locales
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'ngx-role',
@@ -42,7 +42,7 @@ export class RoleComponent implements OnInit {
         title: 'Domaine',
         type: 'string',
       },
-	  droit: {
+	    droit: {
         title: 'Droit',
         type: 'string',
         width: '10%',
@@ -52,9 +52,10 @@ export class RoleComponent implements OnInit {
         type: 'string',
         width: '5%',
       },
-      nb_membres: {
+      membres: {
         title: 'Membres',
         type: 'number',
+        width: '5%',
       },
     },
   };
@@ -83,12 +84,9 @@ export class RoleComponent implements OnInit {
     if (window.confirm('Voulez-vous vraiment supprimer cet article ?')) {
       this.service.deleteData(event.data._id)
         .subscribe(
-          (res: IRoleTab) => {
-          console.log(res.STATUS);
-          if(res.STATUS === 'SUCCESS'){
-            event.confirm.resolve(event.data);
-            this.source.remove(event.data);
-          }
+        (res: IRoleTab) => {
+          event.confirm.resolve(event.data);
+          this.source.remove(event.data);
         },(err: HttpErrorResponse) => {
           this.isAlertTriggered = true;                             
           this.alert = this.error.errorHandler(err.status, err.statusText);
@@ -101,15 +99,11 @@ export class RoleComponent implements OnInit {
   onCreateConfirm(event): void {
     this.service.setData(event.newData)
       .subscribe(
-        (res: IRoleTab) => {
-        console.log(res.STATUS);
-        if(res.STATUS === 'SUCCESS'){
-          event.confirm.resolve(event.newData);
-          this.source.refresh();
-        } else {
-          event.confirm.reject();
-        }
+      (res: IRoleTab) => {
+        event.confirm.resolve(event.newData);
+        this.source.refresh();
       },(err: HttpErrorResponse) => {
+        event.confirm.reject();
         this.isAlertTriggered = true;                             
         this.alert = this.error.errorHandler(err.status, err.statusText);
       });
@@ -118,15 +112,11 @@ export class RoleComponent implements OnInit {
   onEditConfirm(event): void {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
-        (res: IRoleTab) => {
-        console.log(res.STATUS);
-        if(res.STATUS === 'SUCCESS'){
-          event.confirm.resolve(event.newData);
-          this.source.update(event.data, event.newData);
-        } else {
-          event.confirm.reject();
-        }
+      (res: IRoleTab) => {
+        event.confirm.resolve(event.newData);
+        this.source.update(event.data, event.newData);
       },(err: HttpErrorResponse) => {
+        event.confirm.reject();
         this.isAlertTriggered = true;                             
         this.alert = this.error.errorHandler(err.status, err.statusText);
       });

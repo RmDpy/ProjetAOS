@@ -30,4 +30,9 @@ export default class StockService {
         stocks.deleteOne(query, callback);
     }
 
+    public deleteMagasinStock(magasin: String, callback: any) {
+        const query = { magasin: magasin };
+        stocks.deleteMany(query, callback);
+    }
+
 }

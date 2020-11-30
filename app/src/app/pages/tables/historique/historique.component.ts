@@ -44,10 +44,10 @@ export class HistoriqueComponent implements OnInit {
         title: 'Magasin',
         type: 'string',
       },
-      emplacement: {
-        title: 'Emplacement',
+      etat: {
+        title: 'Etat',
         type: 'string',
-        width: '10%',
+        width: '5%',
       },
       num_bon: {
         title: 'Bon n°',

@@ -2,7 +2,6 @@ export interface IStock {
     _id?: String;
     magasin: String;
     emplacement: String;
-    etat: String;
     reference: String;
     libelle: String;
     prix: Number;

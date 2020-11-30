@@ -28,6 +28,10 @@ export class AosStockService {
     return this.http.delete(this.stockUrl + '/' + id);
   }
 
+  deleteMagasinData(magasin: any): any {
+    return this.http.delete(this.stockUrl + '/query/' + magasin);
+  }
+
   updateData(id: any, data: any): any {
     return this.http.put(this.stockUrl + '/' + id, data);
   }

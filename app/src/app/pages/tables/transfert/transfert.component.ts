@@ -103,7 +103,7 @@ export class TransfertComponent implements OnInit {
   onCreateConfirm(event): void {
     var newSortie = this.generateDataHistorique(event.newData, "Sortie");
     var newEntree = this.generateDataHistorique(event.newData, "Entrée");
-    this.verifyCalcNewStock(event, newEntree, newSortie, event.newData.quantite);
+    this.verifyCalcNewData(event, newEntree, newSortie, event.newData.quantite);
   }
 
   onClosingAlert(): void {
@@ -119,7 +119,7 @@ export class TransfertComponent implements OnInit {
       "mouvement": typeMouvement,
       "quantite": dataTransfert.quantite,
       "magasin": String,
-      "emplacement": "TESO",
+      "etat": "Actif",
       "num_bon": dataTransfert.num_bon
     };
 
@@ -164,7 +164,7 @@ export class TransfertComponent implements OnInit {
       });  
   }
 
-  verifyCalcNewStock(eventTransfert, dataEntree, dataSortie, quantiteTransfert): void { //Coincé ici
+  verifyCalcNewData(eventTransfert, dataEntree, dataSortie, quantiteTransfert): void { //Coincé ici
     this.stock.getDataID(dataSortie.reference, dataSortie.magasin)
       .subscribe(
         (resSortie: IStockTab) => {
@@ -179,8 +179,12 @@ export class TransfertComponent implements OnInit {
                 if(this.verifyValidtyStock(resSortie.DATA.stock_qt, quantiteTransfert)){
                   // @ts-ignore
                   resSortie.DATA.stock_qt = resSortie.DATA.stock_qt - quantiteTransfert;
+                   // @ts-ignore
+                  resSortie.DATA.stock_val = resSortie.DATA.stock_qt * resSortie.DATA.prix;
                   // @ts-ignore
                   resEntree.DATA.stock_qt = +resEntree.DATA.stock_qt + +quantiteTransfert;
+                  // @ts-ignore
+                  resEntree.DATA.stock_val = resEntree.DATA.stock_qt * resEntree.DATA.prix;
                   //Update les Stocks
                   this.onUpdateStock(resSortie.DATA);
                   this.onUpdateStock(resEntree.DATA);

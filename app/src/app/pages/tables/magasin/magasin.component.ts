@@ -1,6 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { IMagasinTab } from 'app/@core/data/aos_data_models/magasin.model';
+import { IStockTab } from 'app/@core/data/aos_data_models/stock.model';
+import { IHistoriqueTab } from 'app/@core/data/aos_data_models/historique.model';
+import { AosStockService } from 'app/@core/data/aos_data_services/aos-stock.service';
+import { AosHistoriqueService } from 'app/@core/data/aos_data_services/aos-historique.service';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosMagasinService } from 'app/@core/data/aos_data_services/aos-magasin.service';
 import { LocalDataSource } from 'ng2-smart-table';
@@ -55,7 +59,7 @@ export class MagasinComponent implements OnInit {
         width: '15%',
       },
       stock_val: {
-        title: 'Valeur du stock',
+        title: 'Valeur du stock (€)',
         type: 'string',
         width: '15%',
       },
@@ -63,19 +67,19 @@ export class MagasinComponent implements OnInit {
   };
 
   source: LocalDataSource = new LocalDataSource();
-  sourceRes$: IMagasinTab; //Permet de définir le type attendu pour res = L'interface correspondante à notre model
+  sourceRes$: IMagasinTab;
   alert: object;
   isAlertTriggered: boolean;
   
-  constructor(private service: AosMagasinService, private error: AosErrorService) { } //On définit le service approprié
+  constructor(private service: AosMagasinService, private stock: AosStockService, private error: AosErrorService, private historique: AosHistoriqueService) { }
 
   ngOnInit(): void {
     this.isAlertTriggered = false;
-    this.service.getData() //Invoque la fonction approppriée, ici Get obviously
+    this.service.getData()
     .subscribe(
       (res: IMagasinTab) => {
-      this.sourceRes$ = res; //Je devrai vérifier si le status de la res est ok mais j'ai zappé pour le get
-      this.source.load(this.sourceRes$.DATA); //load permet d'injecter la partie DATA de la res dans la table
+      this.sourceRes$ = res;
+      this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
       this.alert = this.error.errorHandler(err.status, err.statusText);
@@ -87,13 +91,36 @@ export class MagasinComponent implements OnInit {
       this.isAlertTriggered = false;
   }
 
-  onDeleteConfirm(event): void { //Est appelé quand on delete (se referer au component.html)
+  onDeleteConfirm(event): void {
     if (window.confirm('Voulez-vous vraiment supprimer ce magasin ?')) {
+
+      this.stock.deleteMagasinData(event.data.magasin)
+        .subscribe(
+          (res: IStockTab) => {
+            this.onClosingAlert();
+            console.log("delete magasin success");
+        },(err: HttpErrorResponse) => {       
+            event.confirm.reject();                      
+            this.isAlertTriggered = true;                             
+            this.alert = this.error.errorHandler(err.status, "DELETE STOCK : " + err.statusText);
+        });
+
+        this.historique.updateMagasinData(event.data.magasin, event.data)
+          .subscribe(
+            (res: IHistoriqueTab) => {
+              this.onClosingAlert();
+              console.log("delete magasin success");
+          },(err: HttpErrorResponse) => {       
+              event.confirm.reject();                      
+              this.isAlertTriggered = true;                             
+              this.alert = this.error.errorHandler(err.status, "DELETE STOCK : " + err.statusText);
+          });
+
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: IMagasinTab) => {
-            event.confirm.resolve(event.data); //Retire la ligne appropriée de la table
-            this.source.remove(event.data); //Retire les données appropriées de la source de données
+            event.confirm.resolve(event.data);
+            this.source.remove(event.data);
             this.onClosingAlert();
         },(err: HttpErrorResponse) => {       
             event.confirm.reject();                      
@@ -110,7 +137,7 @@ export class MagasinComponent implements OnInit {
       .subscribe(
         (res: IMagasinTab) => {
           event.confirm.resolve(event.newData);
-          this.source.refresh(); //TODO : Bug, quand on vient de rajouter une ligne, il faut recharger la page avant de pouvour la delete/edit...
+          this.source.refresh();
           this.onClosingAlert();
         },(err: HttpErrorResponse) => {  
           event.confirm.reject();                           

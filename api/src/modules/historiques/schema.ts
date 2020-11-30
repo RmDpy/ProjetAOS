@@ -10,7 +10,7 @@ const schema = new Schema({
     mouvement: String,
     quantite: Number,
     magasin: String,
-    emplacement: String,
+    etat: String,
     num_bon: String,
     is_deleted: {
         type: Boolean,

@@ -27,6 +27,10 @@ export class HistoriqueRoutes {
             this.historique_controller.update_historique(req, res);
         });
 
+        app.put('/api/historique/query/:magasin', (req: Request, res: Response) => {
+            this.historique_controller.update_historique_by_magasin(req, res);
+        });
+
         app.delete('/api/historique/:id', (req: Request, res: Response) => {
             this.historique_controller.delete_historique(req, res);
         });

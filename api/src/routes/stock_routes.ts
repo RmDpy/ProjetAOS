@@ -35,5 +35,9 @@ export class StockRoutes {
             this.stock_controller.delete_stock(req, res);
         });
 
+        app.delete('/api/stock/query/:magasin', (req: Request, res: Response) => {
+            this.stock_controller.delete_by_magasin(req, res);
+        });
+
     }
 }

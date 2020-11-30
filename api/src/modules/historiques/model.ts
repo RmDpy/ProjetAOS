@@ -8,7 +8,7 @@ export interface IHistorique {
     mouvement: String;
     quantite: Number;
     magasin: String;
-    emplacement: String;
+    etat: String,
     num_bon: String;
     is_deleted?: Boolean;
     modification_notes: ModificationNote[]
