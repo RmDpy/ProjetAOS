@@ -6,7 +6,7 @@ export interface IHistorique {
     reference: String;
     libelle: String;
     mouvement: String;
-    quantite: String;
+    quantite: Number;
     magasin: String;
     emplacement: String;
     num_bon: String;

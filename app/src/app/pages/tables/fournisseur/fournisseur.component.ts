@@ -75,6 +75,7 @@ export class FournisseurComponent implements OnInit {
   constructor(private service: AosFournisseurService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false;
     this.service.getData()
     .subscribe(
       (res: IFournisseurTab) => {
@@ -134,4 +135,10 @@ export class FournisseurComponent implements OnInit {
         this.alert = this.error.errorHandler(err.status, err.statusText);
       });
     }
+
+  onClosingAlert(): void {
+    if(this.isAlertTriggered)
+      this.isAlertTriggered = false;
   }
+
+}

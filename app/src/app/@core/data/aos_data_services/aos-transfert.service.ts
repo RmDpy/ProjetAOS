@@ -20,7 +20,6 @@ export class AosTransfertService {
   }
 
   deleteData(id:any): any {
-    console.log(id);
     return this.http.delete(this.transfertUrl + '/' + id);
   }
 

@@ -54,6 +54,21 @@ export class StockController {
         }
     }
 
+    public get_stock_by_params(req: Request, res: Response) {
+        if (req.params.reference && req.params.magasin) {
+            const stock_filter = { reference: req.params.reference, magasin: req.params.magasin };
+            this.stock_service.filterStock(stock_filter, (err: any, stock_data: IStock) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter stock by new params is successfull', stock_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
     public get_stock_by_magasin(req: Request, res: Response) {
         if (req.params.magasin) {
             const stock_filter = { magasin: req.params.magasin };

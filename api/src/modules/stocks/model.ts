@@ -7,9 +7,9 @@ export interface IStock {
     etat: String;
     reference: String;
     libelle: String;
-    prix: String;
-    stock_qt: String;
-    stock_val: String;
+    prix: Number;
+    stock_qt: Number;
+    stock_val: Number;
     is_deleted?: Boolean;
     modification_notes: ModificationNote[]
 }

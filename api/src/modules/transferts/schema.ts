@@ -9,8 +9,6 @@ const schema = new Schema({
     quantite: Number,
     mag_fournisseur: String,
     mag_demandeur: String,
-    emplacement: String,
-    auteur: String,
     num_bon: String,
     is_deleted: {
         type: Boolean,

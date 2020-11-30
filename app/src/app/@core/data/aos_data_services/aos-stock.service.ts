@@ -16,6 +16,10 @@ export class AosStockService {
     return this.http.get(this.stockUrl);
   }
 
+  getDataID(reference, magasin): any {
+    return this.http.get(this.stockUrl + '/query/' + reference + '/' + magasin);
+  }
+
   setData(data: any): any {
     return this.http.post(this.stockUrl, data);
   }
@@ -27,4 +31,5 @@ export class AosStockService {
   updateData(id: any, data: any): any {
     return this.http.put(this.stockUrl + '/' + id, data);
   }
+
 }

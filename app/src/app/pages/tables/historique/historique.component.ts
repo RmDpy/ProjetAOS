@@ -64,6 +64,7 @@ export class HistoriqueComponent implements OnInit {
   constructor(private service: AosHistoriqueService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false; 
     this.service.getData() //Traces de mouvements indélébiles = Historique charge les datas. Pas d'altération possible EDIT/DELETE
     .subscribe(
       (res: IHistoriqueTab) => {
@@ -81,4 +82,10 @@ export class HistoriqueComponent implements OnInit {
     if(typeMouvement === "Sortie")
     return "outStock";
   }
+
+  onClosingAlert(): void {
+    if(this.isAlertTriggered)
+      this.isAlertTriggered = false;
+  }
+
 }

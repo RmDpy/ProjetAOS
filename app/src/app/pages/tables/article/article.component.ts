@@ -67,6 +67,7 @@ settings = {
   constructor(private service: AosArticleService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false;
     this.service.getData()
     .subscribe(
       (res: IArticleTab) => {
@@ -127,4 +128,10 @@ settings = {
         this.alert = this.error.errorHandler(err.status, err.statusText);
       });
     }
+
+  onClosingAlert(): void {
+    if(this.isAlertTriggered)
+      this.isAlertTriggered = false;
   }
+
+}

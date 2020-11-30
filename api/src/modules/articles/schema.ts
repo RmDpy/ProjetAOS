@@ -9,7 +9,7 @@ const schema = new Schema({
     etat: String,
     fournisseur: String,
     organisation: String,
-    prix: String,
+    prix: Number,
     is_deleted: {
         type: Boolean,
         default: false

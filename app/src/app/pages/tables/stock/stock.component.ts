@@ -63,7 +63,7 @@ export class StockComponent implements OnInit {
       },
       stock_val: {
         title: 'Valeur',
-        type: 'string',
+        type: 'number',
       },
     },
   };
@@ -76,6 +76,7 @@ export class StockComponent implements OnInit {
   constructor(private service: AosStockService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false;
     this.service.getData()
     .subscribe(
       (res: IStockTab) => {
@@ -144,4 +145,4 @@ export class StockComponent implements OnInit {
         this.alert = this.error.errorHandler(err.status, err.statusText);
       });
     }
-  }
+}

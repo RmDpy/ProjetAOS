@@ -67,6 +67,7 @@ export class RoleComponent implements OnInit {
   constructor(private service: AosRoleService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false;
     this.service.getData()
     .subscribe(
       (res: IRoleTab) => {
@@ -130,4 +131,10 @@ export class RoleComponent implements OnInit {
         this.alert = this.error.errorHandler(err.status, err.statusText);
       });
   }
+
+  onClosingAlert(): void {
+    if(this.isAlertTriggered)
+      this.isAlertTriggered = false;
+  }
+
 }
