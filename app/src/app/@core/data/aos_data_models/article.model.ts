@@ -5,7 +5,7 @@ export interface IArticle {
     etat: String;
     fournisseur: String;
     organisation: String;
-    prix: String;
+    prix: Number;
     is_deleted?: Boolean;
     modification_notes: any[]
 }

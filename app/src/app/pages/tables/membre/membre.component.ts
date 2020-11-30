@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { IMembreTab } from 'app/@core/data/aos_data_models/membre.model';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosMembreService } from 'app/@core/data/aos_data_services/aos-membre.service';
-import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui permet de gérer les données locales
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'ngx-membre',
@@ -75,13 +75,14 @@ settings = {
   constructor(private service: AosMembreService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false;  
     this.service.getData()
     .subscribe((res: IMembreTab) => {
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(err.status, err.statusText);
+      this.alert = this.error.errorHandler(err.status, "GET MEMBRES : " + err.statusText);
     });
   }
 
@@ -90,13 +91,11 @@ settings = {
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: IMembreTab) => {
-          if(res.STATUS === 'SUCCESS'){
             event.confirm.resolve(event.data);
             this.source.remove(event.data);
-          }
         },(err: HttpErrorResponse) => {
-          this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, err.statusText);
+            this.isAlertTriggered = true;                             
+            this.alert = this.error.errorHandler(err.status, "DELETE MEMBRE : " + err.statusText);
         });
     } else {
       event.confirm.reject();
@@ -107,15 +106,11 @@ settings = {
     this.service.setData(event.newData)
       .subscribe(
         (res: IMembreTab) => {
-        if(res.STATUS === 'SUCCESS'){
           event.confirm.resolve(event.newData);
-          this.source.refresh();
-        } else {
-          event.confirm.reject();
-        }
       },(err: HttpErrorResponse) => {
-        this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, err.statusText);
+          event.confirm.reject();
+          this.isAlertTriggered = true;                             
+          this.alert = this.error.errorHandler(err.status, "SET MEMBRE : " + err.statusText);
       });
   }
 
@@ -123,15 +118,18 @@ settings = {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
         (res: IMembreTab) => {
-        if(res.STATUS === 'SUCCESS'){
           event.confirm.resolve(event.newData);
           this.source.update(event.data, event.newData);
-        } else {
-          event.confirm.reject();
-        }
       },(err: HttpErrorResponse) => {
-        this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, err.statusText);
+          event.confirm.reject();
+          this.isAlertTriggered = true;                             
+          this.alert = this.error.errorHandler(err.status, "UPDATE MEMBRE : " + err.statusText);
       });
-    } 
+    }
+
+  onClosingAlert(): void {
+    if(this.isAlertTriggered)
+      this.isAlertTriggered = false;
   }
+
+}

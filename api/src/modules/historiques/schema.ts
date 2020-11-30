@@ -8,9 +8,9 @@ const schema = new Schema({
     reference: String,
     libelle: String,
     mouvement: String,
-    quantite: String,
+    quantite: Number,
     magasin: String,
-    emplacement: String,
+    etat: String,
     num_bon: String,
     is_deleted: {
         type: Boolean,

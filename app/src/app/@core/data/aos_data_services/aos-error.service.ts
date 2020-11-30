@@ -10,7 +10,7 @@ export class AosErrorService {
     return alert;
   }
 
-  errorHandler(type, message): object {
+  errorHandler(type: Number, message: String): object {
     switch(type) { 
       case 400: { 
         return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+') - Ils manquent des données nécéssaires pour cette opération.');
@@ -26,7 +26,10 @@ export class AosErrorService {
       }
       case 500: { 
         return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+') - Le serveur ne répond plus, veuillez réessayer ultérieurement.');
-      }        
+      }
+      case 418: { 
+        return this.onTriggeringAlert('danger', 'Erreur '+type+' (Custom Error) - ' + message); //Les alertes customs hors HTTP res de l'application
+      }         
       default: { 
         return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+' | API ou APP inactive ?) - Une erreur est survenue, réessayer ultérieurement.');
       } 

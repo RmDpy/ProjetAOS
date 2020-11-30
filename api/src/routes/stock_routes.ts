@@ -23,12 +23,20 @@ export class StockRoutes {
             this.stock_controller.get_stock_by_magasin(req, res);
         });
 
+        app.get('/api/stock/query/:reference/:magasin', (req: Request, res: Response) => {
+            this.stock_controller.get_stock_by_params(req, res);
+        });
+
         app.put('/api/stock/:id', (req: Request, res: Response) => {
             this.stock_controller.update_stock(req, res);
         });
 
         app.delete('/api/stock/:id', (req: Request, res: Response) => {
             this.stock_controller.delete_stock(req, res);
+        });
+
+        app.delete('/api/stock/query/:magasin', (req: Request, res: Response) => {
+            this.stock_controller.delete_by_magasin(req, res);
         });
 
     }

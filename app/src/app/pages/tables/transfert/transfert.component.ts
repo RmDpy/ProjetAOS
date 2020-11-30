@@ -1,11 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { IHistoriqueTab } from 'app/@core/data/aos_data_models/historique.model';
+import { IStockTab } from 'app/@core/data/aos_data_models/stock.model';
 import { ITransfertTab } from 'app/@core/data/aos_data_models/transfert.model';
+import { IHistoriqueTab } from 'app/@core/data/aos_data_models/historique.model';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosHistoriqueService } from 'app/@core/data/aos_data_services/aos-historique.service';
+import { AosStockService } from 'app/@core/data/aos_data_services/aos-stock.service';
 import { AosTransfertService } from 'app/@core/data/aos_data_services/aos-transfert.service';
-import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui permet de gérer les données locales
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'ngx-transfert',
@@ -34,7 +36,7 @@ export class TransfertComponent implements OnInit {
     columns: {
       reference: {
         title: 'Référence',
-        type: 'number',
+        type: 'string',
       },
       libelle: {
         title: 'Libellé',
@@ -53,15 +55,6 @@ export class TransfertComponent implements OnInit {
         title: 'Magasin Demandeur',
         type: 'string',
       },
-      emplacement: {
-        title: 'Emplacement',
-        type: 'string',
-        width: '10%',
-      },
-      auteur: {
-        title: 'Auteur',
-        type: 'string',
-      },
       num_bon: {
         title: 'N°Bon',
         type: 'string',
@@ -74,9 +67,10 @@ export class TransfertComponent implements OnInit {
   alert: object;
   isAlertTriggered: boolean;
 
-  constructor(private service: AosTransfertService, private historique: AosHistoriqueService, private error: AosErrorService) { }
+  constructor(private service: AosTransfertService, private stock: AosStockService, private historique: AosHistoriqueService, private error: AosErrorService) { }
   
   ngOnInit(): void {
+    this.isAlertTriggered = false;
     this.service.getData()
     .subscribe(
       (res: ITransfertTab) => {
@@ -84,7 +78,7 @@ export class TransfertComponent implements OnInit {
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(err.status, err.statusText);
+      this.alert = this.error.errorHandler(err.status, "GET TRANSFERT : " + err.statusText);
     });
   }
 
@@ -93,13 +87,11 @@ export class TransfertComponent implements OnInit {
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: ITransfertTab) => {
-          if(res.STATUS === 'SUCCESS'){
             event.confirm.resolve(event.data);
             this.source.remove(event.data);
-          }
         },(err: HttpErrorResponse) => {
           this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, err.statusText);
+          this.alert = this.error.errorHandler(err.status, "DELETE TRANSFERT : " + err.statusText);
         });
     } else {
       event.confirm.reject();
@@ -107,32 +99,25 @@ export class TransfertComponent implements OnInit {
   }
 
   onCreateConfirm(event): void {
-    this.service.setData(event.newData)
-      .subscribe(
-        (res: ITransfertTab) => {
-        if(res.STATUS === 'SUCCESS'){
-          event.confirm.resolve(event.newData);
-          var newEntry = this.generateDataHistorique(event.newData, "Entrée");
-          this.onCreateHistorique(newEntry);
-          var newSortie = this.generateDataHistorique(event.newData, "Sortie");
-          this.onCreateHistorique(newSortie);
-        } else {
-          event.confirm.reject();
-        }
-      },(err: HttpErrorResponse) => {
-        this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, err.statusText);
-      });
+    var newSortie = this.generateDataHistorique(event.newData, "Sortie");
+    var newEntree = this.generateDataHistorique(event.newData, "Entrée");
+    this.verifyCalcNewData(event, newEntree, newSortie, event.newData.quantite);
+  }
+
+  onClosingAlert(): void {
+    if(this.isAlertTriggered)
+      this.isAlertTriggered = false;
   }
 
   generateDataHistorique(dataTransfert, typeMouvement): object {
+
     var dataHistorique = {
       "reference": dataTransfert.reference,
       "libelle": dataTransfert.libelle,
       "mouvement": typeMouvement,
       "quantite": dataTransfert.quantite,
-      "magasin": "undefined",
-      "emplacement": dataTransfert.emplacement,
+      "magasin": String,
+      "etat": "Actif",
       "num_bon": dataTransfert.num_bon
     };
 
@@ -146,24 +131,100 @@ export class TransfertComponent implements OnInit {
 
   onCreateHistorique(dataTransfert): void {
     this.historique.setData(dataTransfert)
-      .subscribe((res: IHistoriqueTab) => {
-        console.log('Historique : ' + res.STATUS);
-      });
+      .subscribe(
+        (res: IHistoriqueTab) => {
+          console.log(res.STATUS);
+      },(err: HttpErrorResponse) => {
+        this.isAlertTriggered = true;                             
+        this.alert = this.error.errorHandler(err.status, "SET HISTORIQUE : " + err.statusText);
+      });  
+  }
+
+  onCreateTransfert(eventTransfert): void{
+    this.service.setData(eventTransfert.newData)
+    .subscribe(
+      (res: ITransfertTab) => {
+        eventTransfert.confirm.resolve(eventTransfert.newData);
+    },(err: HttpErrorResponse) => {
+      this.isAlertTriggered = true;                             
+      this.alert = this.error.errorHandler(err.status, "SET TRANSFERT : " + err.statusText);
+    });
+  }
+
+  onUpdateStock(dataStock): void {
+    this.stock.updateData(dataStock._id, dataStock)
+      .subscribe(
+        (res: IStockTab) => {
+          console.log(res.STATUS);
+      },(err: HttpErrorResponse) => {
+        this.isAlertTriggered = true;                             
+        this.alert = this.error.errorHandler(err.status, "UPDATE STOCK : " + err.statusText);
+      });  
+  }
+
+  verifyCalcNewData(eventTransfert, dataEntree, dataSortie, quantiteTransfert): void {
+    this.stock.getDataID(dataSortie.reference, dataSortie.magasin)
+      .subscribe(
+        (resSortie: IStockTab) => {
+          this.stock.getDataID(dataEntree.reference, dataEntree.magasin)
+            .subscribe(
+              (resEntree: IStockTab) => {
+              if(resEntree.DATA === null || resSortie.DATA === null){
+                this.isAlertTriggered = true;                            
+                this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun stock connu.");
+              } else {
+                  // @ts-ignore
+                if(this.verifyValidtyStock(resSortie.DATA.stock_qt, quantiteTransfert)){
+                  // @ts-ignore
+                  resSortie.DATA.stock_qt = resSortie.DATA.stock_qt - quantiteTransfert;
+                   // @ts-ignore
+                  resSortie.DATA.stock_val = resSortie.DATA.stock_qt * resSortie.DATA.prix;
+                  // @ts-ignore
+                  resEntree.DATA.stock_qt = +resEntree.DATA.stock_qt + +quantiteTransfert;
+                  // @ts-ignore
+                  resEntree.DATA.stock_val = resEntree.DATA.stock_qt * resEntree.DATA.prix;
+                  //Update les Stocks
+                  this.onUpdateStock(resSortie.DATA);
+                  this.onUpdateStock(resEntree.DATA);
+                  //Generate les Mouvements
+                  this.onCreateHistorique(dataEntree);
+                  this.onCreateHistorique(dataSortie);
+                  //Generate Transferts
+                  this.onCreateTransfert(eventTransfert);
+                } else {
+                  this.isAlertTriggered = true;                            
+                  this.alert = this.error.errorHandler(418, "Le stock du magasin fournisseur est trop faible pour cette opération.");
+                }
+              }
+            },(err: HttpErrorResponse) => {
+              this.isAlertTriggered = true;                           
+              this.alert = this.error.errorHandler(err.status, "GET MAGASIN DEMANDEUR : " + err.statusText);
+            }); //fin du second subscribe
+        },(err: HttpErrorResponse) => {
+          this.isAlertTriggered = true;                           
+          this.alert = this.error.errorHandler(err.status, "GET MAGASIN FOURNISSEUR : " + err.statusText);
+        }); //fin du premier subscribe
+  }
+
+  verifyValidtyStock(quantiteStock, quantiteTransfert): boolean{
+    var is_stock_valid: boolean;
+    if (quantiteTransfert <= quantiteStock)
+      is_stock_valid = true;
+    else if (quantiteTransfert > quantiteStock)
+      is_stock_valid = false;
+    return is_stock_valid;
   }
 
   onEditConfirm(event): void {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
         (res: ITransfertTab) => {
-        if(res.STATUS === 'SUCCESS'){
           event.confirm.resolve(event.newData);
           this.source.update(event.data, event.newData);
-        } else {
-          event.confirm.reject();
-        }
       },(err: HttpErrorResponse) => {
+        event.confirm.reject();
         this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, err.statusText);
+        this.alert = this.error.errorHandler(err.status, "EDIT TRANSFERT : " + err.statusText);
       });
     }
   }

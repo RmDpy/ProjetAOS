@@ -19,8 +19,16 @@ export class HistoriqueRoutes {
             this.historique_controller.get_historique_by_id(req, res);
         });
 
+        app.get('/api/stock/query/:date/:reference/:magasin:/:quantite', (req: Request, res: Response) => {
+            this.historique_controller.get_historique_by_params(req, res);
+        });
+
         app.put('/api/historique/:id', (req: Request, res: Response) => {
             this.historique_controller.update_historique(req, res);
+        });
+
+        app.put('/api/historique/query/:magasin', (req: Request, res: Response) => {
+            this.historique_controller.update_historique_by_magasin(req, res);
         });
 
         app.delete('/api/historique/:id', (req: Request, res: Response) => {

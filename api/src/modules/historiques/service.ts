@@ -20,6 +20,11 @@ export default class HistoriqueService {
         const query = { _id: historique_params._id };
         historiques.findOneAndUpdate(query, historique_params, callback);
     }
+
+    public updateVariousHistorique(historique_params: IHistorique, callback: any) {
+        const query = { magasin: historique_params.magasin };
+        historiques.updateMany(query, historique_params, callback);
+    }
     
     public deleteHistorique(_id: String, callback: any) {
         const query = { _id: _id };

@@ -17,6 +17,10 @@ export class AosHistoriqueService {
     return this.http.get(this.historiqueUrl)
   }
 
+  getDataID(date, reference, magasin, quantite): any {
+    return this.http.get(this.historiqueUrl + '/query/' + date + '/' + reference + magasin + '/' + quantite);
+  }
+
   setData(data:any): any {
     return this.http.post(this.historiqueUrl, data);
   }
@@ -29,4 +33,9 @@ export class AosHistoriqueService {
   updateData(id:any, data:any): any {
     return this.http.put(this.historiqueUrl + '/' + id, data);
   }
+
+  updateMagasinData(magasin:any, data:any): any {
+    return this.http.put(this.historiqueUrl + '/query/' + magasin, data);
+  }
+
 }
