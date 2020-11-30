@@ -87,10 +87,8 @@ export class TransfertComponent implements OnInit {
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: ITransfertTab) => {
-          if(res.STATUS === 'SUCCESS'){
             event.confirm.resolve(event.data);
             this.source.remove(event.data);
-          }
         },(err: HttpErrorResponse) => {
           this.isAlertTriggered = true;                             
           this.alert = this.error.errorHandler(err.status, "DELETE TRANSFERT : " + err.statusText);
@@ -164,7 +162,7 @@ export class TransfertComponent implements OnInit {
       });  
   }
 
-  verifyCalcNewData(eventTransfert, dataEntree, dataSortie, quantiteTransfert): void { //Coincé ici
+  verifyCalcNewData(eventTransfert, dataEntree, dataSortie, quantiteTransfert): void {
     this.stock.getDataID(dataSortie.reference, dataSortie.magasin)
       .subscribe(
         (resSortie: IStockTab) => {
@@ -221,13 +219,10 @@ export class TransfertComponent implements OnInit {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
         (res: ITransfertTab) => {
-        if(res.STATUS === 'SUCCESS'){
           event.confirm.resolve(event.newData);
           this.source.update(event.data, event.newData);
-        } else {
-          event.confirm.reject();
-        }
       },(err: HttpErrorResponse) => {
+        event.confirm.reject();
         this.isAlertTriggered = true;                             
         this.alert = this.error.errorHandler(err.status, "EDIT TRANSFERT : " + err.statusText);
       });

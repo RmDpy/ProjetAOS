@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { IHistoriqueTab } from 'app/@core/data/aos_data_models/historique.model';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosHistoriqueService } from 'app/@core/data/aos_data_services/aos-historique.service';
-import { LocalDataSource } from 'ng2-smart-table'; //Bullshit de la template qui permet de gérer les données locales
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'ngx-historique',
@@ -72,7 +72,7 @@ export class HistoriqueComponent implements OnInit {
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(err.status, err.statusText);
+      this.alert = this.error.errorHandler(err.status, "GET HISTORIQUE : " + err.statusText);
     });
   }
 

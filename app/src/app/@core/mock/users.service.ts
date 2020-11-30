@@ -9,6 +9,7 @@ export class UserService extends UserData {
 
   private users = {
     shinji: { name: 'Shinji Ikari', picture: 'assets/images/shinji.png' },
+    louis: { name: 'Louis Laiolo', picture: 'assets/images/louis.png' },
     nick: { name: 'Nick Jones', picture: 'assets/images/nick.png' },
     eva: { name: 'Eva Moor', picture: 'assets/images/eva.png' },
     jack: { name: 'Jack Williams', picture: 'assets/images/jack.png' },
@@ -23,6 +24,7 @@ export class UserService extends UserData {
   };
   private contacts: Contacts[] = [
     { user: this.users.shinji, type: this.types.mobile },
+    { user: this.users.louis, type: this.types.mobile },
     { user: this.users.nick, type: this.types.mobile },
     { user: this.users.eva, type: this.types.home },
     { user: this.users.jack, type: this.types.mobile },
@@ -35,6 +37,7 @@ export class UserService extends UserData {
     { user: this.users.eva, type: this.types.home, time: this.time.setHours(17, 45)},
     { user: this.users.nick, type: this.types.mobile, time: this.time.setHours(5, 29)},
     { user: this.users.shinji, type: this.types.mobile, time: this.time.setHours(5, 29)},
+    { user: this.users.louis, type: this.types.mobile, time: this.time.setHours(5, 29)},
     { user: this.users.lee, type: this.types.mobile, time: this.time.setHours(11, 24)},
     { user: this.users.jack, type: this.types.mobile, time: this.time.setHours(10, 45)},
     { user: this.users.kate, type: this.types.work, time: this.time.setHours(9, 42)},

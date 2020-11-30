@@ -8,7 +8,6 @@ import { AosHistoriqueService } from 'app/@core/data/aos_data_services/aos-histo
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { AosMagasinService } from 'app/@core/data/aos_data_services/aos-magasin.service';
 import { LocalDataSource } from 'ng2-smart-table';
-import { __param } from 'tslib';
 
 @Component({
   selector: 'ngx-magasin',
@@ -22,17 +21,17 @@ export class MagasinComponent implements OnInit {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
-      confirmCreate: true, //Obligatoire pour faire comprendre à la template qu'on passe par nos propres fonctions
+      confirmCreate: true,
     },
     edit: {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true, //Obligatoire pour faire comprendre à la template qu'on passe par nos propres fonctions
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
-      confirmDelete: true, //Obligatoire pour faire comprendre à la template qu'on passe par nos propres fonctions
+      confirmDelete: true,
     },
     columns: {
       magasin: {
@@ -82,7 +81,7 @@ export class MagasinComponent implements OnInit {
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(err.status, err.statusText);
+      this.alert = this.error.errorHandler(err.status, "GET MAGASINS : " + err.statusText);
     });
   }
 
@@ -125,7 +124,7 @@ export class MagasinComponent implements OnInit {
         },(err: HttpErrorResponse) => {       
             event.confirm.reject();                      
             this.isAlertTriggered = true;                             
-            this.alert = this.error.errorHandler(err.status, err.statusText);
+            this.alert = this.error.errorHandler(err.status, "DELETE MAGASISN : " + err.statusText);
         });
     } else {
       event.confirm.reject();
@@ -142,7 +141,7 @@ export class MagasinComponent implements OnInit {
         },(err: HttpErrorResponse) => {  
           event.confirm.reject();                           
           this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, err.statusText);
+          this.alert = this.error.errorHandler(err.status, "SET MAGASIN : " + err.statusText);
         });
   }
 
@@ -156,7 +155,7 @@ export class MagasinComponent implements OnInit {
       },(err: HttpErrorResponse) => {
           event.confirm.reject();                             
           this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, err.statusText);
+          this.alert = this.error.errorHandler(err.status, "UPDATE MAGASIN : " + err.statusText);
       });
   }
 

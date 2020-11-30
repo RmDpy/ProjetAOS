@@ -76,7 +76,7 @@ export class RoleComponent implements OnInit {
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(err.status, err.statusText);
+      this.alert = this.error.errorHandler(err.status, "GET ROLES : " + err.statusText);
     });
   }
 
@@ -89,7 +89,7 @@ export class RoleComponent implements OnInit {
           this.source.remove(event.data);
         },(err: HttpErrorResponse) => {
           this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, err.statusText);
+          this.alert = this.error.errorHandler(err.status, "DELETE ROLE : " + err.statusText);
         });
     } else {
       event.confirm.reject();
@@ -105,7 +105,7 @@ export class RoleComponent implements OnInit {
       },(err: HttpErrorResponse) => {
         event.confirm.reject();
         this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, err.statusText);
+        this.alert = this.error.errorHandler(err.status, "SET ROLE : " + err.statusText);
       });
   }
 
@@ -118,7 +118,7 @@ export class RoleComponent implements OnInit {
       },(err: HttpErrorResponse) => {
         event.confirm.reject();
         this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, err.statusText);
+        this.alert = this.error.errorHandler(err.status, "UPDATE ROLE : " + err.statusText);
       });
   }
 
