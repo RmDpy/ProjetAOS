@@ -25,7 +25,7 @@ export class AosErrorService {
         return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+') - La cible de cette opération est introuvable ou n\'existe plus.');
       }
       case 500: { 
-        return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+') - Le serveur ne répond plus, veuillez réessayer ultérieurement.');
+        return this.onTriggeringAlert('danger', 'Erreur '+type+' ('+message+') - Un mauvais type de donnée a peut-être été rentré.');
       }
       case 418: { 
         return this.onTriggeringAlert('danger', 'Erreur '+type+' (Custom Error) - ' + message); //Les alertes customs hors HTTP res de l'application

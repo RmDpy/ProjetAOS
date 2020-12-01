@@ -74,6 +74,7 @@ export class TransfertComponent implements OnInit {
     this.service.getData()
     .subscribe(
       (res: ITransfertTab) => {
+      this.onClosingAlert();
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
@@ -87,6 +88,7 @@ export class TransfertComponent implements OnInit {
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: ITransfertTab) => {
+            this.onClosingAlert();
             event.confirm.resolve(event.data);
             this.source.remove(event.data);
         },(err: HttpErrorResponse) => {
@@ -110,7 +112,6 @@ export class TransfertComponent implements OnInit {
   }
 
   generateDataHistorique(dataTransfert, typeMouvement): object {
-
     var dataHistorique = {
       "reference": dataTransfert.reference,
       "libelle": dataTransfert.libelle,
@@ -120,12 +121,10 @@ export class TransfertComponent implements OnInit {
       "etat": "Actif",
       "num_bon": dataTransfert.num_bon
     };
-
     if(typeMouvement === "Entrée")
       dataHistorique.magasin = dataTransfert.mag_demandeur;
     if(typeMouvement === "Sortie")
       dataHistorique.magasin = dataTransfert.mag_fournisseur;
-
     return dataHistorique;
   }
 
@@ -133,6 +132,7 @@ export class TransfertComponent implements OnInit {
     this.historique.setData(dataTransfert)
       .subscribe(
         (res: IHistoriqueTab) => {
+          this.onClosingAlert();
           console.log(res.STATUS);
       },(err: HttpErrorResponse) => {
         this.isAlertTriggered = true;                             
@@ -144,6 +144,7 @@ export class TransfertComponent implements OnInit {
     this.service.setData(eventTransfert.newData)
     .subscribe(
       (res: ITransfertTab) => {
+        this.onClosingAlert();
         eventTransfert.confirm.resolve(eventTransfert.newData);
     },(err: HttpErrorResponse) => {
       this.isAlertTriggered = true;                             
@@ -155,6 +156,7 @@ export class TransfertComponent implements OnInit {
     this.stock.updateData(dataStock._id, dataStock)
       .subscribe(
         (res: IStockTab) => {
+          this.onClosingAlert();
           console.log(res.STATUS);
       },(err: HttpErrorResponse) => {
         this.isAlertTriggered = true;                             
@@ -173,6 +175,7 @@ export class TransfertComponent implements OnInit {
                 this.isAlertTriggered = true;                            
                 this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun stock connu.");
               } else {
+                this.onClosingAlert();
                   // @ts-ignore
                 if(this.verifyValidtyStock(resSortie.DATA.stock_qt, quantiteTransfert)){
                   // @ts-ignore
@@ -219,6 +222,7 @@ export class TransfertComponent implements OnInit {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
         (res: ITransfertTab) => {
+          this.onClosingAlert();
           event.confirm.resolve(event.newData);
           this.source.update(event.data, event.newData);
       },(err: HttpErrorResponse) => {

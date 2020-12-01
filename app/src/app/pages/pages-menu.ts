@@ -51,7 +51,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
    {
     title: 'Mon profil',
     icon: 'person-outline',
-    link: '/pages/iot-dashboard',
+    link: '/pages/dashboard',
   },
   {
     title: 'Rôles',

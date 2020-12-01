@@ -68,6 +68,7 @@ export class HistoriqueComponent implements OnInit {
     this.service.getData() //Traces de mouvements indélébiles = Historique charge les datas. Pas d'altération possible EDIT/DELETE
     .subscribe(
       (res: IHistoriqueTab) => {
+      this.onClosingAlert();
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {

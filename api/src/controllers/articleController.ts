@@ -102,6 +102,34 @@ export class ArticleController {
         }
     }
 
+    public update_article_by_fournisseur(req: Request, res: Response) {
+        const article_filter = { fournisseur: req.params.fournisseur };
+        this.article_service.filterArticle(article_filter, (err: any, article_data: IArticle) => {
+            if (err) {
+                mongoError(err, res);
+            } else if (article_data) {
+                article_data.modification_notes.push({
+                    modified_on: new Date(Date.now()),
+                    modified_by: null,
+                    modification_note: 'article data updated by magasin'
+                });
+                const article_params: any = {
+                    fournisseur: req.body.fournisseur ? req.body.fournisseur : article_data.fournisseur,
+                    etat: "Inactif"
+                };
+                this.article_service.updateVariousArticle(article_params, (err: any) => {
+                    if (err) {
+                        mongoError(err, res);
+                    } else {
+                        successResponse('update article by fournisseur is successfull', null, res);
+                    }
+                });
+            } else {
+                failureResponse('invalid article', null, res);
+            }
+        });
+    }
+
     public delete_article(req: Request, res: Response) {
         if (req.params.id) {
             this.article_service.deleteArticle(req.params.id, (err: any, delete_details) => {

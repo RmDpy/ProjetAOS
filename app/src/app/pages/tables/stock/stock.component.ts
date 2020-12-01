@@ -75,6 +75,7 @@ export class StockComponent implements OnInit {
     this.service.getData()
     .subscribe(
       (res: IStockTab) => {
+      this.onClosingAlert();
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
@@ -93,6 +94,7 @@ export class StockComponent implements OnInit {
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: IStockTab) => {
+            this.onClosingAlert();
             event.confirm.resolve(event.data);
             this.source.remove(event.data);
         },(err: HttpErrorResponse) => {
@@ -108,6 +110,7 @@ export class StockComponent implements OnInit {
     this.service.setData(event.newData)
       .subscribe(
         (res: IStockTab) => {
+          this.onClosingAlert();
           event.newData.stock_val = event.newData.stock_qt * event.newData.prix;
           event.confirm.resolve(event.newData);
       },(err: HttpErrorResponse) => {
@@ -121,7 +124,7 @@ export class StockComponent implements OnInit {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
         (res: IStockTab) => {
-        console.log(res.STATUS);
+          this.onClosingAlert();
           event.newData.stock_val = event.newData.stock_qt * event.newData.prix;
           event.confirm.resolve(event.newData);
           this.source.update(event.data, event.newData);

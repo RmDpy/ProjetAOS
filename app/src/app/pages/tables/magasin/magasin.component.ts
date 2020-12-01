@@ -77,6 +77,7 @@ export class MagasinComponent implements OnInit {
     this.service.getData()
     .subscribe(
       (res: IMagasinTab) => {
+      this.onClosingAlert();
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {

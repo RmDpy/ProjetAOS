@@ -23,6 +23,10 @@ export class ArticleRoutes {
             this.article_controller.update_article(req, res);
         });
 
+        app.put('/api/article/query/:fournisseur', (req: Request, res: Response) => {
+            this.article_controller.update_article_by_fournisseur(req, res);
+        });
+
         app.delete('/api/article/:id', (req: Request, res: Response) => {
             this.article_controller.delete_article(req, res);
         });

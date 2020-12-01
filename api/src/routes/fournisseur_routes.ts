@@ -19,6 +19,10 @@ export class FournisseurRoutes {
             this.fournisseur_controller.get_fournisseur_by_id(req, res);
         });
 
+        app.get('/api/fournisseur/query/:code', (req: Request, res: Response) => {
+            this.fournisseur_controller.get_fournisseur_by_code(req, res);
+        });
+
         app.put('/api/fournisseur/:id', (req: Request, res: Response) => {
             this.fournisseur_controller.update_fournisseur(req, res);
         });

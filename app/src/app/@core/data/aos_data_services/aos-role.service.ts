@@ -16,6 +16,10 @@ export class AosRoleService {
     return this.http.get(this.roleUrl);
   }
 
+  getDataRole(role: any): any {
+    return this.http.get(this.roleUrl + '/query/' + role);
+  }
+
   setData(data:any): any {
     return this.http.post(this.roleUrl, data);
   }

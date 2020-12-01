@@ -16,12 +16,15 @@ export class AosFournisseurService {
     return this.http.get(this.fournisseurUrl)
   }
 
+  getDataCode(code: any): any {
+    return this.http.get(this.fournisseurUrl + '/query/' + code);
+  }
+
   setData(data:any): any {
     return this.http.post(this.fournisseurUrl, data);
   }
 
   deleteData(id:any): any {
-    console.log(id);
     return this.http.delete(this.fournisseurUrl + '/' + id);
   }
 

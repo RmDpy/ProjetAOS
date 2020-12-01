@@ -2,6 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { IArticleTab } from 'app/@core/data/aos_data_models/article.model';
 import { AosArticleService } from 'app/@core/data/aos_data_services/aos-article.service';
+import { AosFournisseurService } from 'app/@core/data/aos_data_services/aos-fournisseur.service';
+import { IFournisseurTab } from 'app/@core/data/aos_data_models/fournisseur.model';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
 import { LocalDataSource } from 'ng2-smart-table';
 
@@ -38,22 +40,22 @@ settings = {
         title: 'Libellé',
         type: 'string',
       },
-      etat: {
-        title: 'État',
-        type: 'string',
-        width: '5%',
-      },
       fournisseur: {
         title: 'Fournisseur',
         type: 'string',
         width: '10%',
+      },
+      etat: {
+        title: 'État',
+        type: 'string',
+        width: '5%',
       },
       organisation: {
         title: 'Organisation',
         type: 'string',
       },
       prix: {
-        title: 'Prix Standard',
+        title: 'Prix Standard (€)',
         type: 'number',
       },
     },
@@ -64,13 +66,14 @@ settings = {
   alert: object;
   isAlertTriggered: boolean;
 
-  constructor(private service: AosArticleService, private error: AosErrorService) { }
+  constructor(private service: AosArticleService, private error: AosErrorService, private fournisseur: AosFournisseurService) { }
   
   ngOnInit(): void {
     this.isAlertTriggered = false;
     this.service.getData()
     .subscribe(
       (res: IArticleTab) => {
+      this.onClosingAlert();
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
@@ -84,6 +87,7 @@ settings = {
       this.service.deleteData(event.data._id)
         .subscribe(
           (res: IArticleTab) => {
+            this.onClosingAlert();
             event.confirm.resolve(event.data);
             this.source.remove(event.data);
         },(err: HttpErrorResponse) => {
@@ -96,28 +100,55 @@ settings = {
   }
 
   onCreateConfirm(event): void {
-    this.service.setData(event.newData)
-      .subscribe(
-        (res: IArticleTab) => {
-          event.confirm.resolve(event.newData);
-      },(err: HttpErrorResponse) => {
-          event.confirm.reject();
-          this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, "SET ARTICLE : " + err.statusText);
-      });
+    this.fournisseur.getDataCode(event.newData.fournisseur)
+    .subscribe(
+      (res: IFournisseurTab) => {
+        console.log(res);
+      if(res.DATA === null){
+        this.isAlertTriggered = true;                             
+        this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun fournisseur connu.");
+      } else {
+        this.onClosingAlert();
+        this.service.setData(event.newData)
+        .subscribe(
+          (res: IArticleTab) => {
+            event.confirm.resolve(event.newData);
+        },(err: HttpErrorResponse) => {
+            event.confirm.reject();
+            this.isAlertTriggered = true;                             
+            this.alert = this.error.errorHandler(err.status, "SET ARTICLE : " + err.statusText);
+        });
+      }
+    },(err: HttpErrorResponse) => {
+      this.isAlertTriggered = true;                             
+      this.alert = this.error.errorHandler(err.status, "GET FOURNISSEUR : " + err.statusText);
+    });
   }
 
   onEditConfirm(event): void {
-    this.service.updateData(event.data._id, event.newData)
+    this.fournisseur.getDataCode(event.newData.fournisseur)
       .subscribe(
-        (res: IArticleTab) => {
-          event.confirm.resolve(event.newData);
-          this.source.update(event.data, event.newData);
+        (res: IFournisseurTab) => {
+          if(res.DATA === null){
+            this.isAlertTriggered = true;                             
+            this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun fournisseur connu.");
+          } else {
+            this.onClosingAlert();
+            this.service.updateData(event.data._id, event.newData)
+              .subscribe(
+                (res: IArticleTab) => {
+                  event.confirm.resolve(event.newData);
+                  this.source.update(event.data, event.newData);
+              },(err: HttpErrorResponse) => {
+                  this.isAlertTriggered = true;                             
+                  this.alert = this.error.errorHandler(err.status, "UPDATE ARTICLE : " + err.statusText);
+              });
+          }
       },(err: HttpErrorResponse) => {
-          this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, "UPDATE ARTICLE : " + err.statusText);
+        this.isAlertTriggered = true;                             
+        this.alert = this.error.errorHandler(err.status, "GET FOURNISSEUR : " + err.statusText);
       });
-    }
+  }
 
   onClosingAlert(): void {
     if(this.isAlertTriggered)

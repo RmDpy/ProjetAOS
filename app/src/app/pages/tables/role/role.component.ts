@@ -72,6 +72,7 @@ export class RoleComponent implements OnInit {
     this.service.getData()
     .subscribe(
       (res: IRoleTab) => {
+      this.onClosingAlert();
       this.sourceRes$ = res;
       this.source.load(this.sourceRes$.DATA);
     },(err: HttpErrorResponse) => {
@@ -85,6 +86,7 @@ export class RoleComponent implements OnInit {
       this.service.deleteData(event.data._id)
         .subscribe(
         (res: IRoleTab) => {
+          this.onClosingAlert();
           event.confirm.resolve(event.data);
           this.source.remove(event.data);
         },(err: HttpErrorResponse) => {
@@ -100,6 +102,7 @@ export class RoleComponent implements OnInit {
     this.service.setData(event.newData)
       .subscribe(
       (res: IRoleTab) => {
+        this.onClosingAlert();
         event.confirm.resolve(event.newData);
         this.source.refresh();
       },(err: HttpErrorResponse) => {
@@ -113,6 +116,7 @@ export class RoleComponent implements OnInit {
     this.service.updateData(event.data._id, event.newData)
       .subscribe(
       (res: IRoleTab) => {
+        this.onClosingAlert();
         event.confirm.resolve(event.newData);
         this.source.update(event.data, event.newData);
       },(err: HttpErrorResponse) => {

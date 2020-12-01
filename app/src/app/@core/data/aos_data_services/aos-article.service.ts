@@ -28,4 +28,9 @@ export class AosArticleService {
   updateData(id:any, data:any): any {
     return this.http.put(this.articleUrl + '/' + id, data);
   }
+
+  updateFournisseurData(fournisseur:any, data:any): any {
+    return this.http.put(this.articleUrl + '/query/' + fournisseur, data);
+  }
+
 }

@@ -10,11 +10,10 @@ export class FournisseurController {
 
     public create_fournisseur(req: Request, res: Response) {
         // this check whether all the filds were send through the erquest or not
-        if (req.body.code && req.body.nom && req.body.etat && req.body.pays && req.body.devise && req.body.fabriquant && req.body.sav) {
+        if (req.body.code && req.body.nom && req.body.pays && req.body.devise && req.body.fabriquant && req.body.sav) {
             const fournisseur_params: IFournisseur = {
                 code: req.body.code,
                 nom: req.body.nom,
-                etat: req.body.etat,
                 pays: req.body.pays,
                 devise: req.body.devise,
                 fabriquant: req.body.fabriquant,
@@ -53,6 +52,21 @@ export class FournisseurController {
         }
     }
 
+    public get_fournisseur_by_code(req: Request, res: Response) {
+        if (req.params.code) {
+            const fournisseur_filter = { code: req.params.code };
+            this.fournisseur_service.filterFournisseur(fournisseur_filter, (err: any, fournisseur_data: IFournisseur) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter fournisseur is successfull', fournisseur_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
     public get_all_fournisseur(req: Request, res: Response) {
         const fournisseur_filter = req.params;
     	this.fournisseur_service.retrieveFournisseur(fournisseur_filter, (err: any, fournisseur_data: IFournisseur) => {
@@ -65,7 +79,7 @@ export class FournisseurController {
     }
 
     public update_fournisseur(req: Request, res: Response) {
-        if (req.params.id && req.body.code || req.body.nom || req.body.etat || req.body.pays || req.body.devise || req.body.fabriquant || req.body.sav) {
+        if (req.params.id && req.body.code || req.body.nom || req.body.pays || req.body.devise || req.body.fabriquant || req.body.sav) {
             const fournisseur_filter = { _id: req.params.id };
             this.fournisseur_service.filterFournisseur(fournisseur_filter, (err: any, fournisseur_data: IFournisseur) => {
                 if (err) {
@@ -80,7 +94,6 @@ export class FournisseurController {
                         _id: req.params.id,
                         code: req.body.code ? req.body.code : fournisseur_data.code,
                         nom: req.body.nom ? req.body.nom : fournisseur_data.nom,
-                        etat: req.body.etat ? req.body.etat : fournisseur_data.etat,
                         pays: req.body.pays ? req.body.pays : fournisseur_data.pays,
                         devise: req.body.devise ? req.body.devise : fournisseur_data.devise,
                         fabriquant: req.body.fabriquant ? req.body.fabriquant : fournisseur_data.fabriquant,

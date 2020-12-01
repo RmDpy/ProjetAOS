@@ -20,6 +20,11 @@ export default class ArticleService {
         const query = { _id: article_params._id };
         articles.findOneAndUpdate(query, article_params, callback);
     }
+
+    public updateVariousArticle(article_params: IArticle, callback: any) {
+        const query = { fournisseur: article_params.fournisseur };
+        articles.updateMany(query, article_params, callback);
+    }
     
     public deleteArticle(_id: String, callback: any) {
         const query = { _id: _id };
