@@ -4,7 +4,6 @@ export interface IStock {
     emplacement: String;
     reference: String;
     libelle: String;
-    prix: Number;
     stock_qt: Number;
     stock_val: Number;
     is_deleted?: Boolean;

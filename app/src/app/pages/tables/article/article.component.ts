@@ -102,9 +102,8 @@ settings = {
   onCreateConfirm(event): void {
     this.fournisseur.getDataCode(event.newData.fournisseur)
     .subscribe(
-      (res: IFournisseurTab) => {
-        console.log(res);
-      if(res.DATA === null){
+      (resFournisseur: IFournisseurTab) => {
+      if(resFournisseur.DATA === null){
         this.isAlertTriggered = true;                             
         this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun fournisseur connu.");
       } else {
@@ -128,8 +127,8 @@ settings = {
   onEditConfirm(event): void {
     this.fournisseur.getDataCode(event.newData.fournisseur)
       .subscribe(
-        (res: IFournisseurTab) => {
-          if(res.DATA === null){
+        (resFournisseur: IFournisseurTab) => {
+          if(resFournisseur.DATA === null){
             this.isAlertTriggered = true;                             
             this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun fournisseur connu.");
           } else {

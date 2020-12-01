@@ -1,7 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { IArticleTab } from 'app/@core/data/aos_data_models/article.model';
+import { IMagasinTab } from 'app/@core/data/aos_data_models/magasin.model';
 import { IStockTab } from 'app/@core/data/aos_data_models/stock.model';
+import { AosArticleService } from 'app/@core/data/aos_data_services/aos-article.service';
 import { AosErrorService } from 'app/@core/data/aos_data_services/aos-error.service';
+import { AosMagasinService } from 'app/@core/data/aos_data_services/aos-magasin.service';
 import { AosStockService } from 'app/@core/data/aos_data_services/aos-stock.service';
 import { LocalDataSource } from 'ng2-smart-table';
 
@@ -47,10 +51,6 @@ export class StockComponent implements OnInit {
         title: 'Libellé',
         type: 'string',
       },
-      prix: {
-        title: 'Prix Unitaire (€)',
-        type: 'number',
-      },
       stock_qt: {
         title: 'Quantité',
         type: 'number',
@@ -68,20 +68,20 @@ export class StockComponent implements OnInit {
   alert: object;
   isAlertTriggered: boolean;
 
-  constructor(private service: AosStockService, private error: AosErrorService) { }
+  constructor(private service: AosStockService, private error: AosErrorService, private article: AosArticleService, private magasin: AosMagasinService) { }
   
   ngOnInit(): void {
     this.isAlertTriggered = false;
     this.service.getData()
-    .subscribe(
-      (res: IStockTab) => {
-      this.onClosingAlert();
-      this.sourceRes$ = res;
-      this.source.load(this.sourceRes$.DATA);
-    },(err: HttpErrorResponse) => {
-      this.isAlertTriggered = true;                             
-      this.alert = this.error.errorHandler(err.status, "GET STOCKS : " + err.statusText);
-    });
+      .subscribe(
+        (res: IStockTab) => {
+        this.onClosingAlert();
+        this.sourceRes$ = res;
+        this.source.load(this.sourceRes$.DATA);
+      },(err: HttpErrorResponse) => {
+        this.isAlertTriggered = true;                             
+        this.alert = this.error.errorHandler(err.status, "GET STOCKS : " + err.statusText);
+      });
   }
 
   onClosingAlert(): void {
@@ -107,31 +107,72 @@ export class StockComponent implements OnInit {
   }
 
   onCreateConfirm(event): void {
-    this.service.setData(event.newData)
+    this.magasin.getDataMagasin(event.newData.magasin)
       .subscribe(
-        (res: IStockTab) => {
-          this.onClosingAlert();
-          event.newData.stock_val = event.newData.stock_qt * event.newData.prix;
-          event.confirm.resolve(event.newData);
-      },(err: HttpErrorResponse) => {
-          event.confirm.reject();
+        (magasinRes: IMagasinTab) => {
+        this.onClosingAlert();
+        if(magasinRes.DATA === null){
           this.isAlertTriggered = true;                             
-          this.alert = this.error.errorHandler(err.status, "SET STOCK : " + err.statusText);
+          this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun magasin connu.");
+        } else {
+          this.article.getDataReference(event.newData.reference)
+          .subscribe(
+            (articleRes: IArticleTab) => {
+            this.onClosingAlert();
+            if(articleRes.DATA === null){
+              this.isAlertTriggered = true;                             
+              this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun article connu.");
+            } else {
+              this.service.setData(event.newData)
+              .subscribe(
+                (res: IStockTab) => {
+                  this.onClosingAlert();
+                  // @ts-ignore
+                  event.newData.stock_val = event.newData.stock_qt * articleRes.DATA.prix;
+                  event.confirm.resolve(event.newData);
+              },(err: HttpErrorResponse) => {
+                  event.confirm.reject();
+                  this.isAlertTriggered = true;                             
+                  this.alert = this.error.errorHandler(err.status, "SET STOCK : " + err.statusText);
+              });
+            }
+          },(err: HttpErrorResponse) => {
+            this.isAlertTriggered = true;                             
+            this.alert = this.error.errorHandler(err.status, "GET ARTICLE : " + err.statusText);
+          });
+        }
+      },(err: HttpErrorResponse) => {
+        this.isAlertTriggered = true;                             
+        this.alert = this.error.errorHandler(err.status, "GET MAGASIN : " + err.statusText);
       });
   }
 
   onEditConfirm(event): void {
-    this.service.updateData(event.data._id, event.newData)
-      .subscribe(
-        (res: IStockTab) => {
-          this.onClosingAlert();
-          event.newData.stock_val = event.newData.stock_qt * event.newData.prix;
-          event.confirm.resolve(event.newData);
-          this.source.update(event.data, event.newData);
-      },(err: HttpErrorResponse) => {
-        event.confirm.reject();
+    this.article.getDataReference(event.newData.reference)
+    .subscribe(
+      (articleRes: IArticleTab) => {
+      this.onClosingAlert();
+      if(articleRes.DATA === null){
         this.isAlertTriggered = true;                             
-        this.alert = this.error.errorHandler(err.status, "UPDATE STOCK : " + err.statusText);
-      });
-    }
+        this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun article connu.");
+      } else {
+        // @ts-ignore
+        event.newData.stock_val = event.newData.stock_qt * articleRes.DATA.prix;
+        this.service.updateData(event.data._id, event.newData)
+        .subscribe(
+          (res: IStockTab) => {
+            this.onClosingAlert();
+            event.confirm.resolve(event.newData);
+            this.source.update(event.data, event.newData);
+        },(err: HttpErrorResponse) => {
+          event.confirm.reject();
+          this.isAlertTriggered = true;                             
+          this.alert = this.error.errorHandler(err.status, "UPDATE STOCK : " + err.statusText);
+        });
+      }
+    },(err: HttpErrorResponse) => {
+      this.isAlertTriggered = true;                             
+      this.alert = this.error.errorHandler(err.status, "GET ARTICLE : " + err.statusText);
+    });
+  }
 }

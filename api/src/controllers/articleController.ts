@@ -52,6 +52,21 @@ export class ArticleController {
         }
     }
 
+    public get_article_by_reference(req: Request, res: Response) {
+        if (req.params.reference) {
+            const article_filter = { reference: req.params.reference };
+            this.article_service.filterArticle(article_filter, (err: any, article_data: IArticle) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter article by reference is successfull', article_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
     public get_all_article(req: Request, res: Response) {
         const article_filter = req.params;
         this.article_service.retrieveArticle(article_filter, (err: any, article_data: IArticle) => {

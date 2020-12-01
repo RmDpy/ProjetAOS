@@ -16,6 +16,10 @@ export class AosArticleService {
     return this.http.get(this.articleUrl)
   }
 
+  getDataReference(reference: any): any {
+    return this.http.get(this.articleUrl + '/query/' + reference)
+  }
+
   setData(data:any): any {
     return this.http.post(this.articleUrl, data);
   }

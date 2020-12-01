@@ -16,6 +16,10 @@ export class AosMagasinService {
     return this.http.get(this.magasinUrl);
   }
 
+  getDataMagasin(magasin: any): any {
+    return this.http.get(this.magasinUrl + '/query/' + magasin);
+  }
+
   setData(data:any): any {
     return this.http.post(this.magasinUrl, data);
   }

@@ -108,8 +108,8 @@ settings = {
 
   onCreateConfirm(event): void {
     this.role.getDataRole(event.newData.role)
-      .subscribe((res: IRoleTab) => {
-        if(res.DATA === null){
+      .subscribe((roleRes: IRoleTab) => {
+        if(roleRes.DATA === null){
           this.isAlertTriggered = true;                             
           this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun role connu.");
         } else {
@@ -132,8 +132,8 @@ settings = {
 
   onEditConfirm(event): void {
     this.role.getDataRole(event.newData.role)
-    .subscribe((res: IRoleTab) => {
-      if(res.DATA === null){
+    .subscribe((roleRes: IRoleTab) => {
+      if(roleRes.DATA === null){
         this.isAlertTriggered = true;                             
         this.alert = this.error.errorHandler(418, "Les informations données ne correspondent à aucun role connu.");
       } else {

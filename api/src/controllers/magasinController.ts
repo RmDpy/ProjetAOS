@@ -54,6 +54,21 @@ export class MagasinController {
         }
     }
 
+    public get_magasin_by_magasin(req: Request, res: Response) {
+        if (req.params.magasin) {
+            const magasin_filter = { magasin: req.params.magasin };
+            this.magasin_service.filterMagasin(magasin_filter, (err: any, magasin_data: IMagasin) => {
+                if (err) {
+                    mongoError(err, res);
+                } else {
+                    successResponse('Filter magasin by magasin is successfull', magasin_data, res);
+                }
+            });
+        } else {
+            insufficientParameters(res);
+        }
+    }
+
     public get_all_magasin(req: Request, res: Response) {
         const magasin_filter = req.params;
     	this.magasin_service.retrieveMagasin(magasin_filter, (err: any, magasin_data: IMagasin) => {

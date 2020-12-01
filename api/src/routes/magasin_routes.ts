@@ -19,6 +19,10 @@ export class MagasinRoutes {
             this.magasin_controller.get_magasin_by_id(req, res);
         });
 
+        app.get('/api/magasin/query/:magasin', (req: Request, res: Response) => {
+            this.magasin_controller.get_magasin_by_magasin(req, res);
+        });
+
         app.put('/api/magasin/:id', (req: Request, res: Response) => {
             this.magasin_controller.update_magasin(req, res);
         });

@@ -19,6 +19,10 @@ export class ArticleRoutes {
             this.article_controller.get_article_by_id(req, res);
         });
 
+        app.get('/api/article/query/:reference', (req: Request, res: Response) => {
+            this.article_controller.get_article_by_reference(req, res);
+        });
+
         app.put('/api/article/:id', (req: Request, res: Response) => {
             this.article_controller.update_article(req, res);
         });

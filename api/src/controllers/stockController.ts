@@ -10,15 +10,14 @@ export class StockController {
 
     public create_stock(req: Request, res: Response) {
         // this check whether all the filds were send through the erquest or not
-        if (req.body.magasin && req.body.emplacement && req.body.reference && req.body.libelle && req.body.stock_qt && req.body.prix) {
+        if (req.body.magasin && req.body.emplacement && req.body.reference && req.body.libelle && req.body.stock_qt) {
             const stock_params: IStock = {
                 magasin: req.body.magasin,
                 emplacement: req.body.emplacement,
                 reference: req.body.reference,
                 libelle: req.body.libelle,
                 stock_qt: req.body.stock_qt,
-                stock_val: req.body.stock_qt * req.body.prix,
-                prix: req.body.prix,
+                stock_val: req.body.stock_val,
                 modification_notes: [{
                     modified_on: new Date(Date.now()),
                     modified_by: null,
@@ -95,7 +94,7 @@ export class StockController {
     }
 
     public update_stock(req: Request, res: Response) {
-        if (req.params.id && req.body.magasin || req.body.emplacement || req.body.reference || req.body.libelle || req.body.stock_qt || req.body.prix ) {
+        if (req.params.id && req.body.magasin || req.body.emplacement || req.body.reference || req.body.libelle || req.body.stock_qt) {
             const stock_filter = { _id: req.params.id };
             this.stock_service.filterStock(stock_filter, (err: any, stock_data: IStock) => {
                 if (err) {
@@ -113,8 +112,7 @@ export class StockController {
                         reference: req.body.reference ? req.body.reference : stock_data.reference,
                         libelle: req.body.libelle ? req.body.libelle : stock_data.libelle,
                         stock_qt: req.body.stock_qt ? req.body.stock_qt : stock_data.stock_qt,
-                        stock_val: req.body.stock_val ? req.body.stock_val : +stock_data.stock_val*+stock_data.prix,
-                        prix: req.body.prix ? req.body.prix : stock_data.prix,
+                        stock_val: req.body.stock_val ? req.body.stock_val : stock_data.stock_val,
                         is_deleted: req.body.is_deleted ? req.body.is_deleted : stock_data.is_deleted,
                         modification_notes: stock_data.modification_notes
                     };
