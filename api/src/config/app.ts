@@ -12,10 +12,13 @@ import { MembreRoutes } from "../routes/membre_routes";
 import { StockRoutes } from "../routes/stock_routes";
 import { CommonRoutes } from "../routes/common_routes";
 
+import * as path from "path";
+
 class App {
 
    public app: express.Application;
-   public mongoUrl: string = 'mongodb://localhost/' + environment.getDBName();
+
+   public mongoUrl: string = 'mongodb+srv://admin_bdd:admin_bdd@cluster0.aqzty.mongodb.net/db_gmao_prod?retryWrites=true&w=majority';
 
    private magasin_routes: MagasinRoutes = new MagasinRoutes();
    private article_routes: ArticleRoutes = new ArticleRoutes();
@@ -29,6 +32,7 @@ class App {
 
    constructor() {
       this.app = express();
+      this.app.use(express.static(path.join(__dirname, "../../../app/dist")));
       this.config();
       this.mongoSetup();
       this.magasin_routes.route(this.app);
