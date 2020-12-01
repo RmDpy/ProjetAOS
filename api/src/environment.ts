@@ -27,7 +27,7 @@ class Environment {
         } else if (this.environment === Environments.dev_environment) {
             return 'db_gmao_dev';
         } else {
-            return 'db_gmao_local';
+            return 'db_gmao_prod';
         }
     }
 }
