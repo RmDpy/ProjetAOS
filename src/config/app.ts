@@ -32,7 +32,7 @@ class App {
 
    constructor() {
       this.app = express();
-      this.app.use(express.static(path.join(__dirname, "../../../app/dist")));
+      this.app.use(express.static(path.join(__dirname, "../../client/dist")));
       this.config();
       this.mongoSetup();
       this.magasin_routes.route(this.app);
